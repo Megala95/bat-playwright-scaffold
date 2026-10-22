@@ -1,0 +1,195 @@
+{
+  "config": {
+    "argv": [
+      "/opt/node22/bin/node",
+      "/repo/node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.env.config.ts"
+    ],
+    "configFile": "/repo/playwright.env.config.ts",
+    "rootDir": "/repo/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/repo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "badlaunch",
+        "name": "badlaunch",
+        "testDir": "/repo/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/launch\\.spec/"
+        ],
+        "timeout": 6000
+      },
+      {
+        "outputDir": "/repo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "nobrowser",
+        "name": "nobrowser",
+        "testDir": "/repo/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/launch\\.spec/"
+        ],
+        "timeout": 6000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "results-env.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "launch.spec.ts",
+      "file": "launch.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "launch fails",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "badlaunch",
+              "projectName": "badlaunch",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /nonexistent/chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /nonexistent/chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /nonexistent/chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:32.296Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/launch-launch-fails-badlaunch/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "dbef296c55402b17a338-f3365544ac5006959f06",
+          "file": "launch.spec.ts",
+          "line": 2,
+          "column": 5
+        },
+        {
+          "title": "launch fails",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "nobrowser",
+              "projectName": "nobrowser",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2,
+                  "error": {
+                    "message": "Error: browserType.launch: Executable doesn't exist at /opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                    "stack": "Error: browserType.launch: Executable doesn't exist at /opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Executable doesn't exist at /opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:32.811Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/launch-launch-fails-nobrowser/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "dbef296c55402b17a338-916f015b732d7b51d577",
+          "file": "launch.spec.ts",
+          "line": 2,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-06T19:32:31.814Z",
+    "duration": 1091.485,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

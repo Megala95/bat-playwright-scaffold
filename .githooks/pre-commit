@@ -1,0 +1,17 @@
+#!/bin/sh
+# BAT learning hook (installed with: npm run learn-install-hook).
+# Records WHAT you changed in tests / page objects / locator files (the kind of
+# edit and the redacted statement - see src/learning/redact.ts) as a small JSON
+# file in .learnings/events/, and adds it to this commit. It never blocks a
+# commit: every failure here is swallowed and the exit status is always 0.
+# Skip it for one commit with: BAT_LEARN=0 git commit ...
+[ "$BAT_LEARN" = "0" ] && exit 0
+git diff --cached --name-only --diff-filter=M | grep -Eq '^(tests|src/pages|src/locators|output/automation)/' || exit 0
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+cd "$ROOT" || exit 0
+[ -f src/learning/captureGit.ts ] || exit 0
+LIMIT=""
+command -v timeout >/dev/null 2>&1 && LIMIT="timeout 30"
+$LIMIT npx --no-install ts-node src/learning/captureGit.ts --staged --write --quiet >/dev/null 2>&1 || true
+[ -d .learnings/events ] && git add .learnings/events >/dev/null 2>&1
+exit 0

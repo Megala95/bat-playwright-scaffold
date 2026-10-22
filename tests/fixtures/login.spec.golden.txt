@@ -1,0 +1,15 @@
+import { test } from "@playwright/test";
+import { LoginPage } from "../../src/pages/LoginPage";
+
+test.describe("valid credentials reach the authenticated app shell @generated", () => {
+  test("valid credentials reach the authenticated app shell", async ({ page }) => {
+    const pageObject = new LoginPage(page);
+    await pageObject.goto(process.env.BAT_APP_BASE_URL ?? "https://REPLACE_WITH_APP_BASE_URL");
+    await pageObject.act("usernameField", "fill", "REPLACE_USERNAME");
+    await pageObject.act("passwordField", "fill", "REPLACE_PASSWORD");
+    await pageObject.act("signInButton", "click");
+    await pageObject.verify("postLoginLandmark", "assertVisible");
+    await pageObject.verify("postLoginLandmark", "assertText", "Welcome back");
+    await pageObject.verify("loginErrorMessage", "assertText", "Invalid username or password", { exact: true });
+  });
+});

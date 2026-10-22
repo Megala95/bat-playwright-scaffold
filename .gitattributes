@@ -1,0 +1,5 @@
+# The git hook and the generated skill references must keep LF line endings on every platform:
+# a CRLF hook cannot run, and learn-publish --check compares the generated files exactly.
+.githooks/* text eol=lf
+.github/skills/**/references/*.md text eol=lf
+.learnings/**/*.json text eol=lf

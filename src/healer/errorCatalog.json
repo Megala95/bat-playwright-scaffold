@@ -1,0 +1,978 @@
+[
+  {
+    "id": "placeholder-in-error",
+    "title": "A REPLACE_ placeholder reached the browser",
+    "classification": "test-data",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "REPLACE_[A-Z_]+"
+    ],
+    "diagnosis": "A scaffold placeholder (REPLACE_WITH_APP_BASE_URL, REPLACE_USERNAME, REPLACE_ID_...) was never filled in, so the test is running against a value that cannot exist. This is missing configuration, not a product failure.",
+    "evidence": [
+      "Which REPLACE_ token appears in the message",
+      "Is BAT_APP_BASE_URL / BAT_APP_USERNAME / BAT_APP_PASSWORD set in this environment (CI secrets?)",
+      "Does src/locators/*.json still contain REPLACE_ID_ selectors"
+    ],
+    "fixes": [
+      "Set the missing environment variable or CI secret.",
+      "Replace placeholder selectors in the locator file with validated ones (npm run crawl / extract-html, or a Playwright MCP snapshot).",
+      "Make the spec fail fast with a clear message when a required variable is unset (test.skip(!value, 'X is not set') or a guard in a fixture)."
+    ],
+    "neverDo": [
+      "Editing the test body to bypass the placeholder.",
+      "Hardcoding a real URL or credential into the spec."
+    ],
+    "skillArea": "framework-scaffolding",
+    "example": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://replace_with_app_base_url/login\nCall log:\n  - navigating to \"https://replace_with_app_base_url/login\", waiting until \"load\""
+  },
+  {
+    "id": "invalid-url",
+    "title": "Navigation URL is invalid",
+    "classification": "test-data",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "Cannot navigate to invalid URL|Invalid URL"
+    ],
+    "diagnosis": "page.goto() received something that is not an absolute URL - usually baseURL / BAT_APP_BASE_URL is unset or lacks the scheme (https://).",
+    "evidence": [
+      "Value of BAT_APP_BASE_URL and playwright.config use.baseURL",
+      "Whether the spec passes a relative path to page.goto without a baseURL"
+    ],
+    "fixes": [
+      "Set baseURL (with https://) in config or the environment.",
+      "Use relative paths in page.goto('/path') so baseURL applies.",
+      "Add a guard that fails with a readable message if the base URL is empty."
+    ],
+    "neverDo": [
+      "Concatenating an unvalidated string into the URL inside the test."
+    ],
+    "skillArea": "framework-scaffolding",
+    "example": "Error: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"/login\", waiting until \"load\""
+  },
+  {
+    "id": "browser-launch-failed",
+    "title": "Browser could not be launched",
+    "classification": "environment",
+    "healing": "none",
+    "confidence": "high",
+    "match": [
+      "browserType\\.launch:"
+    ],
+    "diagnosis": "Playwright could not start the browser at all, so no test could run. The browser is not installed on this machine or runner, the executable path is wrong, or a system dependency is missing. Nothing in the tests is at fault.",
+    "evidence": [
+      "Was `npx playwright install --with-deps chromium` run on this runner / image",
+      "PLAYWRIGHT_BROWSERS_PATH and any executablePath in the config",
+      "Does every test fail with this same message (then it is the runner, not a test)"
+    ],
+    "fixes": [
+      "Install the browsers on the runner (npx playwright install --with-deps chromium) or fix the image.",
+      "If a custom executablePath is configured, point it at an existing binary.",
+      "Re-run the smoke gate before the full suite."
+    ],
+    "neverDo": [
+      "Editing tests.",
+      "Retrying or quarantining tests to get past a missing browser."
+    ],
+    "skillArea": "execution-stabilization",
+    "example": "Error: browserType.launch: Executable doesn't exist at /opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n╚════════════════════════════════════════════════════════════╝"
+  },
+  {
+    "id": "env-network-error",
+    "title": "Environment unreachable (network error)",
+    "classification": "environment",
+    "healing": "none",
+    "confidence": "high",
+    "match": [
+      "net::ERR_(NAME_NOT_RESOLVED|CONNECTION_REFUSED|CONNECTION_RESET|CONNECTION_CLOSED|CONNECTION_ABORTED|CONNECTION_TIMED_OUT|TIMED_OUT|INTERNET_DISCONNECTED|TUNNEL_CONNECTION_FAILED|UNSAFE_PORT|ADDRESS_UNREACHABLE|EMPTY_RESPONSE|HTTP2_PROTOCOL_ERROR|NETWORK_CHANGED|CERT_[A-Z_]+|SSL_[A-Z_]+|PROXY_CONNECTION_FAILED)"
+    ],
+    "diagnosis": "The browser could not reach the application at all. The test did nothing wrong; the environment, network path, VPN, proxy, certificate or URL is the suspect.",
+    "evidence": [
+      "Is the base URL right and the environment up (run the smoke gate: npm run test:smoke)",
+      "VPN / proxy / allow-list on the runner",
+      "Certificate validity (ERR_CERT_*)",
+      "Do many unrelated tests fail with the same error? (then it is environment-wide)"
+    ],
+    "fixes": [
+      "Fix the environment, URL, proxy or certificate trust outside the test code.",
+      "Re-run the smoke gate before re-running the suite.",
+      "If a certificate is genuinely self-signed in a test environment, configure ignoreHTTPSErrors in config for that environment only, with approval."
+    ],
+    "neverDo": [
+      "Editing, retrying or quarantining tests to get past an outage.",
+      "Turning on ignoreHTTPSErrors globally to silence a real certificate problem."
+    ],
+    "skillArea": "execution-stabilization",
+    "example": "Error: page.goto: net::ERR_CONNECTION_REFUSED at https://app.example.com/login"
+  },
+  {
+    "id": "api-connection-error",
+    "title": "API/network call could not connect",
+    "classification": "environment",
+    "healing": "none",
+    "confidence": "high",
+    "match": [
+      "\\b(ECONNREFUSED|ENOTFOUND|ECONNRESET|ETIMEDOUT|EAI_AGAIN)\\b|socket hang up"
+    ],
+    "diagnosis": "A request made from the test process (request fixture, API setup call, fetch) could not reach its server: connection refused, name not resolved, reset or timed out. The service or network path is down or the URL/host is wrong.",
+    "evidence": [
+      "Is the API base URL set and correct for this environment",
+      "Is the service up (health endpoint)",
+      "VPN / proxy / DNS on the runner",
+      "Do unrelated tests fail the same way"
+    ],
+    "fixes": [
+      "Fix the environment, URL or network path outside the test code.",
+      "Re-run the smoke gate, then the suite."
+    ],
+    "neverDo": [
+      "Editing, retrying or quarantining tests to get past an outage.",
+      "Swallowing the error in setup code so the test 'passes' without its data."
+    ],
+    "skillArea": "execution-stabilization",
+    "example": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:1\nCall log:\n  - → GET http://127.0.0.1:1/api/x"
+  },
+  {
+    "id": "goto-timeout",
+    "title": "Page navigation timed out",
+    "classification": "environment",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "page\\.goto: Timeout \\d+ms exceeded"
+    ],
+    "diagnosis": "The page did not reach the load state in time. Usually a slow or overloaded environment, a heavy third-party script, or a wait-until condition that never fires on this app.",
+    "evidence": [
+      "Does the same URL load by hand and how long does it take",
+      "Is it only under parallel load (workers / shards)",
+      "Does the app hold a connection open (websocket, long poll) so 'load' or 'networkidle' never completes"
+    ],
+    "fixes": [
+      "Check environment health and load before touching the test.",
+      "Navigate with waitUntil: 'domcontentloaded' and assert a landmark element (toBeVisible) instead of waiting for the full load.",
+      "Reduce parallelism for this project if the environment cannot take it."
+    ],
+    "neverDo": [
+      "Raising the navigation timeout globally.",
+      "Adding waitForTimeout() after goto."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "Error: page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://app.example.com/\", waiting until \"load\""
+  },
+  {
+    "id": "storage-state-missing",
+    "title": "Saved login session file is missing",
+    "classification": "environment",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "Error reading storage state from|ENOENT[^\\n]*\\.auth"
+    ],
+    "diagnosis": "A context was created with storageState pointing at a file that does not exist, so globalSetup did not write it (credentials not set, login failed, or it ran in a different working directory).",
+    "evidence": [
+      "Were BAT_APP_USERNAME / BAT_APP_PASSWORD set (the AuthScaffold warning in the log says so)",
+      "Did globalSetup log in successfully",
+      "Is the path in the config the one AuthScaffold writes (AUTH_STATE_FILE)"
+    ],
+    "fixes": [
+      "Provide the credentials so globalSetup can log in and write the session.",
+      "If a spec should start unauthenticated, opt it out with test.use({ storageState: { cookies: [], origins: [] } })."
+    ],
+    "neverDo": [
+      "Creating an empty session file to silence the error.",
+      "Adding a login block to every test."
+    ],
+    "skillArea": "framework-scaffolding",
+    "example": "Error: Error reading storage state from /repo/.auth/session.json:\nENOENT: no such file or directory, open '/repo/.auth/session.json'"
+  },
+  {
+    "id": "test-data-undefined",
+    "title": "Test data value was undefined",
+    "classification": "test-data",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "expected string, got (undefined|null)"
+    ],
+    "diagnosis": "An action was given undefined/null instead of a string. In practice an environment variable or fixture value that was never provided (process.env.X is undefined).",
+    "evidence": [
+      "Which variable feeds this action (see the stack line)",
+      "Is it set in this environment and in CI secrets"
+    ],
+    "fixes": [
+      "Provide the variable / fixture value.",
+      "Fail early with a readable message: read required data through a helper that throws or test.skip()s when missing.",
+      "Do not use the non-null assertion (!) on process.env values in specs."
+    ],
+    "neverDo": [
+      "Defaulting to an empty string so the test 'runs'.",
+      "Hardcoding the value."
+    ],
+    "skillArea": "framework-scaffolding",
+    "example": "Error: locator.fill: value: expected string, got undefined"
+  },
+  {
+    "id": "test-timeout",
+    "title": "Whole-test timeout exceeded",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "Test timeout of \\d+ms exceeded"
+    ],
+    "diagnosis": "The test as a whole ran out of time. Either one step hung (find which in the trace) or the test is simply doing too much (a long end-to-end case that should be split).",
+    "evidence": [
+      "The trace/last step reached - the step it was waiting on is the real failure",
+      "Test duration on passing runs (is it close to the limit)",
+      "Is a single test covering several manual cases"
+    ],
+    "fixes": [
+      "Fix the step it was stuck on (see the matching locator/assertion entry).",
+      "If the test legitimately needs longer, set test.setTimeout() on that one test with a comment saying why.",
+      "Split an oversized test into independent tests with their own setup."
+    ],
+    "neverDo": [
+      "Raising the global timeout.",
+      "Adding sleeps."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "Test timeout of 90000ms exceeded."
+  },
+  {
+    "id": "worker-crashed",
+    "title": "Test worker process died",
+    "classification": "framework",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "worker process exited unexpectedly"
+    ],
+    "diagnosis": "The process running the test ended without reporting a result: the test or code under it called process.exit, ran out of memory (signal=SIGKILL), or the browser crashed the worker.",
+    "evidence": [
+      "The exit code / signal in the message (SIGKILL usually means memory)",
+      "Does any code call process.exit()",
+      "Runner memory and the number of workers"
+    ],
+    "fixes": [
+      "Remove process.exit() from test/helper code.",
+      "If memory: lower workers or increase runner memory.",
+      "Re-run the single test with --workers=1 to see whether it reproduces."
+    ],
+    "neverDo": [
+      "Raising timeouts.",
+      "Retrying until it passes."
+    ],
+    "skillArea": "execution-stabilization",
+    "example": "Error: worker process exited unexpectedly (code=3, signal=null)"
+  },
+  {
+    "id": "browser-closed",
+    "title": "Page, context or browser was closed",
+    "classification": "framework",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "Target page, context or browser has been closed|Target closed|browser has been closed"
+    ],
+    "diagnosis": "Something used the page after it was closed. Typical causes: the test already timed out and teardown ran while a step was still in flight, an explicit page.close(), a popup that closed itself, or a crash.",
+    "evidence": [
+      "Is there also a 'Test timeout' for this test (then that is the real cause)",
+      "Any page.close() / context.close() in the test or a fixture",
+      "Did a popup or new tab close itself before the test used it"
+    ],
+    "fixes": [
+      "Fix the earlier failure or timeout first; this error is usually a symptom.",
+      "Keep a reference to the right page (popup vs opener) and do not use a closed one.",
+      "Use fixtures for pages instead of manual close calls."
+    ],
+    "neverDo": [
+      "Wrapping the step in try/catch to swallow the error."
+    ],
+    "skillArea": "execution-stabilization",
+    "example": "Error: page.setContent: Target page, context or browser has been closed"
+  },
+  {
+    "id": "strict-mode-violation",
+    "title": "Locator matches more than one element",
+    "classification": "locator",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "strict mode violation"
+    ],
+    "diagnosis": "The locator is ambiguous: it resolves to several elements and Playwright refuses to guess. The selector is too loose, or the page now shows duplicates (repeated rows, a hidden twin, a mobile and a desktop copy).",
+    "evidence": [
+      "The list of matched elements printed in the error (are they genuinely different things)",
+      "Is the duplicate new (page changed) or was it always there"
+    ],
+    "fixes": [
+      "Narrow the locator: add the accessible name, scope it inside a parent region/row, or use filter({ hasText }).",
+      "If the elements are repeated rows, locate the row by its content first, then act inside it.",
+      "Use nth()/first()/last() only when the manual test truly means 'the first one', and say so in a comment."
+    ],
+    "neverDo": [
+      "Appending .first() just to silence the error.",
+      "Switching to a looser selector."
+    ],
+    "skillArea": "locator-naming-convention",
+    "example": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Save' }) resolved to 2 elements:\n    1) <button>Save</button>\n    2) <button>Save</button>"
+  },
+  {
+    "id": "click-intercepted",
+    "title": "Another element covers the target",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "intercepts pointer events"
+    ],
+    "diagnosis": "The element exists and is visible, but another element (modal backdrop, spinner, cookie banner, sticky header, toast) is on top of it, so the click would hit the wrong thing.",
+    "evidence": [
+      "The intercepting element named in the call log (class / id)",
+      "Screenshot or trace at the failure moment",
+      "Is the overlay transient (loading) or permanent (consent banner)"
+    ],
+    "fixes": [
+      "If it is a loading overlay: assert it is gone first, e.g. await expect(overlay).toBeHidden(), then act.",
+      "If it is a consent/banner: dismiss it in setup (a fixture or the storageState), not in every test.",
+      "If a sticky header covers it: scroll the element into view with a safer locator or scrollIntoViewIfNeeded()."
+    ],
+    "neverDo": [
+      "Using { force: true } to click through the overlay.",
+      "Adding waitForTimeout()."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "TimeoutError: locator.click: Timeout 2000ms exceeded.\nCall log:\n  - waiting for locator('#b')\n    - locator resolved to <button id=\"b\">Pay</button>\n    - attempting click action\n      - <div class=\"modal-backdrop\"></div> intercepts pointer events"
+  },
+  {
+    "id": "element-not-enabled",
+    "title": "Element is disabled",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "element is not enabled|Expected: enabled\\s*\\n\\s*Received: disabled"
+    ],
+    "diagnosis": "The element was found but stayed disabled. Either the app has not yet enabled it (a precondition earlier in the flow did not complete or validation is failing) or the step order is wrong.",
+    "evidence": [
+      "What should enable it (required field, previous step, async validation)",
+      "Did the previous step actually succeed - is there a verification after it"
+    ],
+    "fixes": [
+      "Add a verification after the preceding step so the failure points at the real cause.",
+      "Complete the missing precondition (a required field, a selection) before this step.",
+      "If enabling is asynchronous, assert expect(locator).toBeEnabled() before acting instead of sleeping."
+    ],
+    "neverDo": [
+      "Using { force: true }.",
+      "Adding waitForTimeout()."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "TimeoutError: locator.click: Timeout 2000ms exceeded.\nCall log:\n  - waiting for locator('#dis')\n    - locator resolved to <button id=\"dis\" disabled>Off</button>\n    - attempting click action\n      - element is not enabled"
+  },
+  {
+    "id": "element-not-visible",
+    "title": "Element found but never became visible",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "locator resolved to",
+      "element is not visible"
+    ],
+    "diagnosis": "The locator found an element, but it stayed hidden (display:none / visibility:hidden / zero size) for the whole timeout. Either the page was not in the state the step assumes (a missing earlier step, a menu not opened, a loading state), or the locator matched a hidden duplicate instead of the visible one.",
+    "evidence": [
+      "DOM snapshot at failure: is the matched element the visible one",
+      "The previous step: did it open the menu/tab/panel that reveals this element",
+      "Trace: what was on screen"
+    ],
+    "fixes": [
+      "Add the missing step that reveals it (open the menu, select the tab) and assert the revealed state first.",
+      "If it matched a hidden duplicate, scope the locator to the visible region or add its accessible name."
+    ],
+    "neverDo": [
+      "force: true.",
+      "Raising the timeout.",
+      "Clicking via page.evaluate."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "TimeoutError: locator.click: Timeout 1500ms exceeded.\nCall log:\n  - waiting for locator('#inv')\n    - locator resolved to <button id=\"inv\">Invisible</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not visible\n    - retrying click action"
+  },
+  {
+    "id": "element-not-editable",
+    "title": "Element is read-only",
+    "classification": "locator",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "element is not editable"
+    ],
+    "diagnosis": "fill() targeted an element that is read-only or not an input. The locator probably points at a wrapper or label instead of the real input.",
+    "evidence": [
+      "Element named in the call log",
+      "Is the field genuinely read-only in this state"
+    ],
+    "fixes": [
+      "Target the real input (getByLabel, getByRole('textbox', { name }))",
+      "If read-only is expected in this state, the test step or its precondition is wrong - confirm with the manual case."
+    ],
+    "neverDo": [
+      "Using evaluate() to set the value directly."
+    ],
+    "skillArea": "locator-naming-convention",
+    "example": "Error: locator.fill: Error: Element is not an <input>, <textarea>, <select> or [contenteditable] and does not have a role allowing [aria-readonly]\n  - element is not editable"
+  },
+  {
+    "id": "element-detached",
+    "title": "Element was detached from the DOM",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "not attached to the DOM|element was detached|Element is not attached"
+    ],
+    "diagnosis": "A stale reference: the element was re-rendered or removed between locating it and using it. Almost always a stored element handle or a locator evaluated too early.",
+    "evidence": [
+      "Are ElementHandles ($, $$, elementHandle()) used anywhere in this flow",
+      "Is the framework re-rendering the region after an action"
+    ],
+    "fixes": [
+      "Use locators (page.getByRole(...)) instead of element handles; locators re-resolve on each action.",
+      "Do not cache the element across an action that re-renders the page.",
+      "Assert the post-condition of the previous action before reusing the region."
+    ],
+    "neverDo": [
+      "Retrying the same stale handle in a loop."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "Error: elementHandle.click: Element is not attached to the DOM"
+  },
+  {
+    "id": "navigation-context-destroyed",
+    "title": "Page navigated or frame detached mid-step",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "Execution context was destroyed|Frame was detached|frame got detached|Navigation failed because page was closed"
+    ],
+    "diagnosis": "The page (or frame) navigated away or was removed while a step was reading or acting on it. The step ran against a page that was still changing.",
+    "evidence": [
+      "What triggered the navigation (the previous click, a redirect, an auto-refresh)",
+      "Trace: when the navigation happened relative to the failing step"
+    ],
+    "fixes": [
+      "After the action that navigates, assert the destination (await expect(page).toHaveURL(...)) before the next step.",
+      "Prefer locators and web-first assertions to page.evaluate, which cannot survive a navigation."
+    ],
+    "neverDo": [
+      "Sleeping until the navigation is over.",
+      "Wrapping the step in a retry loop."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "Error: page.evaluate: Execution context was destroyed, most likely because of a navigation"
+  },
+  {
+    "id": "select-option-missing",
+    "title": "Dropdown option not found",
+    "classification": "test-data",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "did not find some options"
+    ],
+    "diagnosis": "selectOption() asked for an option that is not in the list: the value/label differs from what the page offers (wording, casing, a data-dependent option that does not exist in this environment).",
+    "evidence": [
+      "The actual option labels and values in the DOM",
+      "Is the option data-dependent (only present if seeded)"
+    ],
+    "fixes": [
+      "Select by the exact visible label or the real value; correct the test data.",
+      "If the option depends on seeded data, create/seed it in setup.",
+      "Assert the option exists (toHaveText on the select's options) before selecting, to separate data problems from UI problems."
+    ],
+    "neverDo": [
+      "Selecting by index.",
+      "Removing the step."
+    ],
+    "skillArea": "framework-scaffolding",
+    "example": "TimeoutError: locator.selectOption: Timeout 2000ms exceeded.\nCall log:\n  - waiting for locator('#s')\n    - attempting select option action\n      - did not find some options"
+  },
+  {
+    "id": "event-wait-timeout",
+    "title": "Waited for a popup/download/file chooser that never came",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "waiting for event \"(popup|download|filechooser|dialog|page|frameattached|framenavigated)\""
+    ],
+    "diagnosis": "The test registered a wait for an event that did not happen, or registered it too late (after the trigger already fired).",
+    "evidence": [
+      "Order of the statements: the wait must start BEFORE the click that triggers it",
+      "Does the action really open a popup / start a download in this environment"
+    ],
+    "fixes": [
+      "Register the wait first, then trigger: const popupPromise = page.waitForEvent('popup'); await locator.click(); const popup = await popupPromise;",
+      "Or use Promise.all([page.waitForEvent(...), locator.click()]).",
+      "Confirm the trigger itself succeeded (assert the click's precondition)."
+    ],
+    "neverDo": [
+      "Increasing the event timeout.",
+      "Sleeping before the click."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "TimeoutError: page.waitForEvent: Timeout 1500ms exceeded while waiting for event \"popup\"\n=========================== logs ===========================\nwaiting for event \"popup\""
+  },
+  {
+    "id": "response-wait-timeout",
+    "title": "Waited for a network response that never came",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "waiting for event \"(response|request|requestfinished)\"|waitForResponse: Timeout|waitForRequest: Timeout"
+    ],
+    "diagnosis": "The expected API call did not occur within the timeout: the URL pattern does not match what the app really calls, the call was made before the wait started, or the app did not make it.",
+    "evidence": [
+      "The actual request URL in the trace/network log",
+      "Statement order (wait before trigger)"
+    ],
+    "fixes": [
+      "Correct the URL pattern/predicate to match the real request.",
+      "Register waitForResponse before the triggering action.",
+      "Prefer asserting the visible result of the call (web-first assertion) over waiting on network internals."
+    ],
+    "neverDo": [
+      "Using networkidle as a catch-all.",
+      "Adding sleeps."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "TimeoutError: page.waitForResponse: Timeout 1500ms exceeded while waiting for event \"response\"\n=========================== logs ===========================\nwaiting for response \"**/api/none\""
+  },
+  {
+    "id": "wait-for-locator-timeout",
+    "title": "Explicit wait for an element timed out",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "locator\\.waitFor: Timeout \\d+ms exceeded"
+    ],
+    "diagnosis": "An explicit waitFor() never saw the element reach the requested state. Either the element never appears (wrong locator / earlier step failed) or it appears in a different state.",
+    "evidence": [
+      "Locator named in the call log",
+      "State waited for (visible / attached / hidden)",
+      "Result of the step before this wait"
+    ],
+    "fixes": [
+      "Verify the preceding step actually worked (add an assertion).",
+      "Check the locator against a fresh snapshot.",
+      "Replace the explicit waitFor with a web-first assertion where possible."
+    ],
+    "neverDo": [
+      "Raising the waitFor timeout."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "TimeoutError: locator.waitFor: Timeout 1500ms exceeded.\nCall log:\n  - waiting for locator('#late') to be visible"
+  },
+  {
+    "id": "auth-session-redirect",
+    "title": "Redirected to login: session missing or expired",
+    "classification": "environment",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "toHaveURL[^\\n]*failed",
+      "Received (string|pattern):\\s*\\\"[^\\\"\\n]*(?:/|\\.)(?:login|log-in|signin|sign-in|sso|oauth2?|saml|auth|authorize|okta|auth0|onelogin|microsoftonline)(?=[/?#.\\\"&=-])"
+    ],
+    "diagnosis": "The test expected an authenticated page but the app sent it back to a login/SSO URL. The saved session (.auth/session.json) is missing, expired or for the wrong user.",
+    "evidence": [
+      "Age of .auth/session.json (AuthScaffold never expires it)",
+      "Were BAT_APP_USERNAME / BAT_APP_PASSWORD set so globalSetup could log in",
+      "Is this test supposed to start unauthenticated (then it needs test.use({ storageState: ... }))"
+    ],
+    "fixes": [
+      "Delete .auth/session.json and re-run so globalSetup logs in again.",
+      "Confirm the credentials secret is set for this run.",
+      "If the spec tests login itself, opt out of the shared storageState in that spec."
+    ],
+    "neverDo": [
+      "Adding a login block to every test.",
+      "Hardcoding credentials."
+    ],
+    "skillArea": "framework-scaffolding",
+    "example": "Error: expect(page).toHaveURL(expected) failed\n\nExpected pattern: /dashboard/\nReceived string:  \"https://app.example.com/login?next=%2Fdashboard\"\nTimeout: 1500ms"
+  },
+  {
+    "id": "url-mismatch",
+    "title": "Page URL is not what was expected",
+    "classification": "product-defect-suspect",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "toHaveURL[^\\n]*failed"
+    ],
+    "diagnosis": "The test ended up on a different URL than the manual expected result describes. Either an earlier step did not do what it should, the URL pattern is too strict/dynamic, or the product navigated somewhere unexpected.",
+    "evidence": [
+      "Received URL vs expected pattern",
+      "The step before: did it succeed (is there an assertion)",
+      "Is the expected URL dynamic (ids, query strings)"
+    ],
+    "fixes": [
+      "If the URL is dynamic, match a stable part with a RegExp.",
+      "Add a verification on the step before so the failure is attributed correctly.",
+      "If the product really navigates elsewhere, report it as a possible defect - do not change the expectation to match."
+    ],
+    "neverDo": [
+      "Loosening the pattern to /.*/ or removing the assertion."
+    ],
+    "skillArea": "assertion-strategy",
+    "example": "Error: expect(page).toHaveURL(expected) failed\n\nExpected pattern: /dashboard/\nReceived string:  \"about:blank\"\nTimeout: 1500ms"
+  },
+  {
+    "id": "assertion-target-not-found",
+    "title": "Assertion target does not exist",
+    "classification": "locator",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "expect\\([^\\n]*\\)\\.to[A-Za-z]+\\([^\\n]*\\) failed",
+      "element\\(s\\) not found"
+    ],
+    "diagnosis": "An assertion's locator matched nothing for the whole timeout. Either the locator is stale/wrong, the expected content never rendered because an earlier step failed silently, or it is in an iframe/shadow root.",
+    "evidence": [
+      "Locator named in the error against a fresh DOM snapshot",
+      "The step before - was its outcome verified",
+      "Is the element inside an iframe, shadow DOM or a different tab"
+    ],
+    "fixes": [
+      "Re-derive the locator from a fresh snapshot (Playwright MCP) and prefer getByRole/getByLabel/getByTestId.",
+      "If it is in an iframe, scope with page.frameLocator(...).",
+      "Add an assertion after the previous step so the failure is reported at the right place."
+    ],
+    "neverDo": [
+      "Replacing the assertion with a weaker one that passes.",
+      "Removing the assertion."
+    ],
+    "skillArea": "locator-source-strategy",
+    "example": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('Missing thing')\nExpected: visible\nTimeout: 1500ms\nError: element(s) not found"
+  },
+  {
+    "id": "assertion-hidden",
+    "title": "Element exists but is not visible",
+    "classification": "synchronization",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "toBeVisible\\(\\) failed",
+      "Received: hidden"
+    ],
+    "diagnosis": "The element is in the DOM but hidden (display:none, zero size, collapsed panel, still animating, or behind a closed menu). A missing interaction before it, or the state it depends on never happened.",
+    "evidence": [
+      "Computed visibility of the element (collapsed section, closed dropdown, tab not selected)",
+      "The action that should reveal it"
+    ],
+    "fixes": [
+      "Perform the interaction that reveals it (open the menu, select the tab) and verify that step.",
+      "If it appears after an async load, keep the web-first assertion (it already retries) and fix the cause of the delay, not the wait.",
+      "Check the locator is not matching a hidden duplicate."
+    ],
+    "neverDo": [
+      "Using toBeAttached() to make a visibility check pass.",
+      "Adding sleeps."
+    ],
+    "skillArea": "synchronization-strategy",
+    "example": "Error: expect(locator).toBeVisible() failed\n\nLocator:  locator('#h')\nExpected: visible\nReceived: hidden\nTimeout:  1500ms"
+  },
+  {
+    "id": "assertion-unexpectedly-visible",
+    "title": "Element is still visible when it should be hidden",
+    "classification": "product-defect-suspect",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "expect\\([^\\n]*\\)\\.(not\\.toBeVisible|toBeHidden)\\([^\\n]*\\) failed",
+      "Received: visible"
+    ],
+    "diagnosis": "The assertion waited for the element to disappear and it never did. Either the product did not hide it (a defect: the error stays, the spinner never stops, the dialog does not close) or the test is waiting for the wrong element or too short a time for a genuinely slow operation.",
+    "evidence": [
+      "Screenshot / trace: what is the element and is it a loading indicator",
+      "Does it disappear if you wait longer manually (slow) or never (defect)",
+      "Is the locator the right element"
+    ],
+    "fixes": [
+      "If it is a spinner and the operation is genuinely slow, wait with a targeted timeout on this assertion and document why.",
+      "If it never goes away, report it as a product defect."
+    ],
+    "neverDo": [
+      "Deleting the assertion.",
+      "Asserting on something else so the test passes."
+    ],
+    "skillArea": "assertion-strategy",
+    "example": "Error: expect(locator).toBeHidden() failed\n\nLocator:  locator('#v')\nExpected: hidden\nReceived: visible\nTimeout:  1000ms"
+  },
+  {
+    "id": "assertion-text-mismatch",
+    "title": "Text differs from the expected result",
+    "classification": "product-defect-suspect",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "to(HaveText|ContainText)\\([^\\n]*\\) failed"
+    ],
+    "diagnosis": "The element is there but its text is not what the manual expected result says. Four possible causes: the product changed or is wrong, the expected text in the test is stale or has a typo, whitespace/casing/i18n differences, or dynamic content (dates, ids, counts).",
+    "evidence": [
+      "Expected vs Received printed in the error - compare character by character (double spaces, trailing punctuation)",
+      "Is the text dynamic or localized",
+      "Does the manual case say the exact wording matters"
+    ],
+    "fixes": [
+      "Whitespace-only or casing-only difference: normalize via a RegExp or toContainText on the stable part, and say so.",
+      "Dynamic part: assert the stable text, and the dynamic part by pattern.",
+      "Wording genuinely differs from the manual case: this may be a product defect - report it, do not edit the expectation to match."
+    ],
+    "neverDo": [
+      "Switching toHaveText to toContainText (or a broad RegExp) just to turn the test green without disclosing it.",
+      "Deleting the assertion."
+    ],
+    "skillArea": "assertion-strategy",
+    "example": "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  locator('#t')\nExpected: \"Welcome back!\"\nReceived: \"Welcome  back\"\nTimeout:  1500ms"
+  },
+  {
+    "id": "assertion-attribute-mismatch",
+    "title": "Attribute, class or title differs from expected",
+    "classification": "product-defect-suspect",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "to(HaveAttribute|HaveClass|ContainClass|HaveCSS|HaveId|HaveTitle|HaveAccessibleName|HaveAccessibleDescription|HaveRole)\\([^\\n]*\\) failed"
+    ],
+    "diagnosis": "The element or page exists but a property differs from the expectation. Either the product changed or is wrong, or the expectation in the test is stale or too exact (a full class list, a title that includes a changing part).",
+    "evidence": [
+      "Expected vs Received in the message",
+      "The manual case: what exactly is meant to be true",
+      "Is the expectation over-specific (whole class string, full title)"
+    ],
+    "fixes": [
+      "If the product is wrong, report it.",
+      "If the expectation is stale/over-specific, assert the part that matters (toContainClass, a RegExp) after confirming against the manual case."
+    ],
+    "neverDo": [
+      "Loosening the matcher until it passes without checking what the requirement is."
+    ],
+    "skillArea": "assertion-strategy",
+    "example": "Error: expect(page).toHaveTitle(expected) failed\n\nExpected: \"Dashboard\"\nReceived: \"Home\"\nTimeout:  1000ms"
+  },
+  {
+    "id": "assertion-value-mismatch",
+    "title": "Field value differs from the expected result",
+    "classification": "product-defect-suspect",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "toHaveValue\\([^\\n]*\\) failed"
+    ],
+    "diagnosis": "The field holds a different value than expected: the earlier fill did not take, the app reformatted/normalized the input, or a default/seed value differs.",
+    "evidence": [
+      "Expected vs Received",
+      "Does the app reformat input (trim, uppercase, mask, currency)",
+      "Was the field filled and verified earlier"
+    ],
+    "fixes": [
+      "If the app legitimately normalizes input, assert the normalized form and note it.",
+      "Verify the fill step (value after typing) to localise the cause.",
+      "Check the test data against what the manual case specifies."
+    ],
+    "neverDo": [
+      "Removing the assertion."
+    ],
+    "skillArea": "assertion-strategy",
+    "example": "Error: expect(locator).toHaveValue(expected) failed\n\nLocator:  locator('#n')\nExpected: \"xyz\"\nReceived: \"abc\"\nTimeout:  1500ms"
+  },
+  {
+    "id": "assertion-count-mismatch",
+    "title": "Number of items differs from the expected result",
+    "classification": "product-defect-suspect",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "toHaveCount\\([^\\n]*\\) failed"
+    ],
+    "diagnosis": "A list/table/result set has a different number of items than expected: data-dependent, filter not applied yet or already applied, pagination, or the locator counts the wrong thing.",
+    "evidence": [
+      "Expected vs Received",
+      "Is the count data-dependent (seeded vs shared data)",
+      "Did the filter/search action complete (verified?)"
+    ],
+    "fixes": [
+      "Make the data deterministic (seed or create it in setup) or assert a relative condition instead of a magic number.",
+      "Assert the filter was applied before counting.",
+      "Check the locator counts exactly the items intended."
+    ],
+    "neverDo": [
+      "Changing the expected number to whatever the run returned."
+    ],
+    "skillArea": "verification-strategy",
+    "example": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('li')\nExpected: 5\nReceived: 2\nTimeout:  1500ms"
+  },
+  {
+    "id": "assertion-state-mismatch",
+    "title": "Element state differs from the expected result",
+    "classification": "product-defect-suspect",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "to(BeChecked|BeDisabled|BeEditable|BeFocused|BeEmpty|BeAttached)\\([^\\n]*\\) failed"
+    ],
+    "diagnosis": "The element exists but is in a different state (unchecked, enabled, empty, not focused) than the manual expected result says.",
+    "evidence": [
+      "Expected vs Received state",
+      "The action that should have changed it - did it run and succeed"
+    ],
+    "fixes": [
+      "Verify the action before this assertion actually executed (e.g. the check() call).",
+      "If the state is set asynchronously, keep the retrying assertion and fix the cause of the delay.",
+      "If the product leaves it in the wrong state, report a possible defect."
+    ],
+    "neverDo": [
+      "Inverting the assertion to match the observed state."
+    ],
+    "skillArea": "assertion-strategy",
+    "example": "Error: expect(locator).toBeChecked() failed\n\nLocator:  locator('#c')\nExpected: checked\nReceived: unchecked\nTimeout:  1500ms"
+  },
+  {
+    "id": "assertion-generic-value",
+    "title": "Value comparison failed (non-retrying expect)",
+    "classification": "product-defect-suspect",
+    "healing": "assisted",
+    "confidence": "low",
+    "match": [
+      "expect\\(received\\)\\.[A-Za-z]+\\("
+    ],
+    "diagnosis": "A plain value assertion (status code, number, string, object, or expect.poll) did not hold. The test read a value and it was not what the manual case expects: a product or API defect, wrong test data, or a value read too early.",
+    "evidence": [
+      "Expected vs Received in the message",
+      "Where the value came from (API response, UI text, calculation)",
+      "Was it read before the page/data settled (then use a retrying matcher or expect.poll)"
+    ],
+    "fixes": [
+      "Confirm against the manual case; if the product is wrong, report it.",
+      "If the value is read once too early, switch to a web-first assertion or expect.poll with a timeout.",
+      "If the test data is wrong, fix the data."
+    ],
+    "neverDo": [
+      "Changing the expected value to whatever was received without a requirement saying so."
+    ],
+    "skillArea": "assertion-strategy",
+    "example": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 200\nReceived: 503"
+  },
+  {
+    "id": "locator-not-found-action",
+    "title": "Action target never appeared",
+    "classification": "locator",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "locator\\.[A-Za-z]+: Timeout \\d+ms exceeded",
+      "waiting for (getBy[A-Za-z]+\\(|locator\\(|text=|xpath=|css=)"
+    ],
+    "exclude": [
+      "locator resolved to",
+      "strict mode violation"
+    ],
+    "diagnosis": "The element an action needed was never found. Common causes: the locator is wrong or stale, the page was not in the expected state (an earlier step silently failed), the element is in an iframe or shadow root, or it renders later than the action timeout.",
+    "evidence": [
+      "Locator in the call log against a fresh DOM snapshot (Playwright MCP) - does it match anything",
+      "What step came before it - was its result verified",
+      "Is the element inside an iframe"
+    ],
+    "fixes": [
+      "Re-derive the locator from a fresh snapshot; prefer getByRole/getByLabel/getByTestId; fall back to a declared fallback locator.",
+      "If it is in an iframe, scope with page.frameLocator(...).",
+      "Add a verification after the previous step so the failure is reported where the real problem is."
+    ],
+    "neverDo": [
+      "Raising the action timeout.",
+      "Adding waitForTimeout().",
+      "Switching to a looser selector so it 'finds something'."
+    ],
+    "skillArea": "locator-source-strategy",
+    "example": "TimeoutError: locator.click: Timeout 2000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Nope' })"
+  },
+  {
+    "id": "screenshot-baseline",
+    "title": "Visual snapshot baseline missing or different",
+    "classification": "framework",
+    "healing": "assisted",
+    "confidence": "high",
+    "match": [
+      "A snapshot doesn't exist|Screenshot comparison failed|snapshot .* does not match"
+    ],
+    "diagnosis": "A visual assertion has no baseline yet, or the rendering differs from the stored one (fonts, OS, animation, dynamic content).",
+    "evidence": [
+      "Is this the first run (baseline never committed)",
+      "Were baselines generated on the same OS/browser as CI"
+    ],
+    "fixes": [
+      "First run: review the written image and commit it as the baseline (--update-snapshots) if correct.",
+      "Different environment: generate baselines in the CI container.",
+      "Mask or hide dynamic regions."
+    ],
+    "neverDo": [
+      "Running --update-snapshots blindly to turn the run green."
+    ],
+    "skillArea": "execution-stabilization",
+    "example": "Error: A snapshot doesn't exist at /repo/tests/x.spec.ts-snapshots/x-linux.png, writing actual."
+  },
+  {
+    "id": "script-runtime-error",
+    "title": "Test code threw a runtime error",
+    "classification": "test-script",
+    "healing": "assisted",
+    "confidence": "medium",
+    "match": [
+      "(TypeError|ReferenceError|RangeError|SyntaxError):|Cannot find module|error TS\\d+"
+    ],
+    "diagnosis": "The test code itself failed before or outside any Playwright action: a null/undefined value, a missing import, a typo or a type error. Often caused by missing test data feeding an expression.",
+    "evidence": [
+      "The stack line pointing into the spec/page object",
+      "Which value is undefined (environment variable? fixture? data table?)"
+    ],
+    "fixes": [
+      "Fix the code at the stack location; run npx tsc --noEmit.",
+      "If the undefined value is test data, supply it or fail early with a readable message.",
+      "Add a guard where the value originates, not where it crashes."
+    ],
+    "neverDo": [
+      "try/catch around the failing line to continue."
+    ],
+    "skillArea": "framework-scaffolding",
+    "example": "TypeError: Cannot read properties of undefined (reading 'thing')"
+  },
+  {
+    "id": "unclassified-timeout",
+    "title": "Timeout with no recognised cause",
+    "classification": "unknown",
+    "healing": "assisted",
+    "confidence": "low",
+    "match": [
+      "Timeout \\d+ms exceeded"
+    ],
+    "diagnosis": "A timeout occurred but the message does not match a known pattern. Read the call log and trace to see what Playwright was waiting for.",
+    "evidence": [
+      "The full call log and the trace",
+      "The last successful step"
+    ],
+    "fixes": [
+      "Work out what was being waited for, then follow the closest catalog entry.",
+      "Log it so the catalog can learn this pattern: npm run log-correction -- failure-healing <file> \"<error>\""
+    ],
+    "neverDo": [
+      "Raising the timeout."
+    ],
+    "skillArea": "failure-healing",
+    "example": "Error: something.weird: Timeout 5000ms exceeded."
+  }
+]

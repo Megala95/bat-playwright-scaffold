@@ -1,0 +1,189 @@
+# Item 4.1/4.3: CI wiring stub - the "no CI workflow file" gap flagged in
+# the Sept 2026 architecture review. Runs unmodified against a fork/clone
+# with GitHub Actions available; if this org's real CI is Jenkins (as
+# playwright.config.ts's comments assume), use the Jenkinsfile alongside
+# this file as the closer template - this one is kept too because it's
+# immediately runnable without any Jenkins instance to validate the
+# meta -> smoke -> sharded-main -> merge shape end to end.
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  meta:
+    name: Generator regression (meta)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:meta
+      # Static review of the shipped scripts and page objects: error-level
+      # findings (hard sleeps, assertion-free tests, hardcoded credentials...)
+      # fail the build here, before any browser touches the app.
+      - run: npm run review-scripts -- --strict
+      # The skills' references/learned-patterns.md are generated from .learnings/patterns/;
+      # a hand edit or a forgotten `npm run learn-publish` fails here.
+      - run: npm run learn-publish -- --check
+
+  smoke:
+    name: Smoke (environment health gate)
+    needs: meta
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:smoke
+        env:
+          BAT_APP_BASE_URL: ${{ secrets.BAT_APP_BASE_URL }}
+          BAT_APP_USERNAME: ${{ secrets.BAT_APP_USERNAME }}
+          BAT_APP_PASSWORD: ${{ secrets.BAT_APP_PASSWORD }}
+          # The smoke gate is the likeliest place an environment outage shows up, so its
+          # results go to the healer too (the merge job picks up every results-* artifact).
+          BAT_RESULTS_FILE: test-results/results-smoke.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-smoke
+          path: test-results/results-smoke.json
+          retention-days: 14
+          if-no-files-found: ignore
+
+  main:
+    name: Main suite (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    needs: smoke
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test tests/example --project=main --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        env:
+          # One JSON results file per shard, so the merge job can hand them all to the healer.
+          BAT_RESULTS_FILE: test-results/results-${{ matrix.shardIndex }}.json
+          BAT_APP_BASE_URL: ${{ secrets.BAT_APP_BASE_URL }}
+          BAT_APP_USERNAME: ${{ secrets.BAT_APP_USERNAME }}
+          BAT_APP_PASSWORD: ${{ secrets.BAT_APP_PASSWORD }}
+      # playwright.config.ts adds the "blob" reporter automatically when
+      # process.env.CI is set - that's the format merge-reports consumes.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: blob-report
+          retention-days: 7
+      # The healer (npm run heal-analyze) needs every shard's JSON results.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-${{ matrix.shardIndex }}
+          path: test-results/results-${{ matrix.shardIndex }}.json
+          retention-days: 14
+          if-no-files-found: ignore
+      # Item flagged by the September 2026 independent re-review: each
+      # matrix shard is an ephemeral, throwaway VM, so FlakyQuarantineReporter's
+      # per-run .flaky-trend/ shard file (see FlakyQuarantineReporter.ts) was
+      # being written and then simply discarded when the runner tore down -
+      # nothing downloaded or merged it, so the continuous-improvement loop's
+      # flaky signal was silently empty in this workflow. Upload it like the
+      # blob report, so merge-reports below can actually aggregate it.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: flaky-trend-${{ matrix.shardIndex }}
+          path: .flaky-trend
+          retention-days: 14
+          if-no-files-found: ignore # a shard with zero flaky tests writes nothing - that's fine
+
+  merge-reports:
+    name: Merge shard reports (item 4.3)
+    needs: main
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: blob-report-*
+          merge-multiple: true
+          path: all-blob-reports
+      - run: npx playwright merge-reports --reporter=html ./all-blob-reports
+      - uses: actions/upload-artifact@v4
+        with:
+          name: html-report--merged
+          path: playwright-report
+          retention-days: 14
+      # Pull every shard's flaky-trend shard file back into one place and
+      # run the real aggregation step (analyzeSkillSignals.ts / npm run
+      # analyze-skills), so this run's flaky signal actually reaches
+      # skill-attention-report.json instead of being lost with the runner.
+      # Note on cross-run history: GitHub Actions artifacts only live for
+      # `retention-days`, so this gives the skill-curator agent a genuine,
+      # analyzable signal for THIS run (and recent runs, while their
+      # artifacts still exist) - it is not indefinite trend storage. If
+      # longer-lived trend history is needed, the next step is to persist
+      # .flaky-trend/ somewhere durable (e.g. a dedicated branch, or an
+      # external store) instead of relying on artifact retention; that's a
+      # deliberate scope cut here, not an oversight.
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: flaky-trend-*
+          merge-multiple: true
+          path: .flaky-trend
+        continue-on-error: true # ok if every shard had zero flaky tests and uploaded nothing
+      - run: npm run analyze-skills -- --days 30
+      # Failure triage: merge every shard's results, classify each failure
+      # against the known-error catalog and say whether this run looks like an
+      # environment problem. Diagnosis only - nothing is edited in CI.
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          merge-multiple: true
+          path: all-results
+        continue-on-error: true # a run whose shards never started has no results
+      - run: |
+          if ls all-results/*.json >/dev/null 2>&1; then
+            npm run heal-analyze -- all-results/*.json
+          else
+            echo "No shard results to analyze."
+          fi
+        continue-on-error: true # triage is advisory; it must never block the uploads after it
+      - uses: actions/upload-artifact@v4
+        with:
+          name: heal-report
+          path: heal-report.json
+          retention-days: 14
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skill-attention-report
+          path: skill-attention-report.json
+          retention-days: 14
+          if-no-files-found: ignore

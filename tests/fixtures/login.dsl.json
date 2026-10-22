@@ -1,0 +1,15 @@
+{
+  "_comment": "Frozen fixture for tests/meta/generator-regression.spec.ts - do not 'improve' this file without also updating login.spec.golden.txt and explaining why in the commit. Illustrative DSL shape (src/generator/dslTypes.ts), not the real governance/dsl-schema.json.",
+  "name": "valid credentials reach the authenticated app shell",
+  "tag": "@generated",
+  "pageObject": "LoginPage",
+  "steps": [
+    { "kind": "goto" },
+    { "kind": "act", "locatorKey": "usernameField", "action": "fill", "value": "REPLACE_USERNAME" },
+    { "kind": "act", "locatorKey": "passwordField", "action": "fill", "value": "REPLACE_PASSWORD" },
+    { "kind": "act", "locatorKey": "signInButton", "action": "click" },
+    { "kind": "verify", "locatorKey": "postLoginLandmark", "action": "assertVisible" },
+    { "kind": "verify", "locatorKey": "postLoginLandmark", "action": "assertText", "expected": "Welcome back" },
+    { "kind": "verify", "locatorKey": "loginErrorMessage", "action": "assertText", "expected": "Invalid username or password", "exact": true }
+  ]
+}

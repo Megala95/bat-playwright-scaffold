@@ -1,0 +1,1809 @@
+{
+  "config": {
+    "argv": [
+      "/opt/node22/bin/node",
+      "/repo/node_modules/.bin/playwright",
+      "test",
+      "--project=ok"
+    ],
+    "configFile": "/repo/playwright.config.ts",
+    "rootDir": "/repo/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/repo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "ok",
+        "name": "ok",
+        "testDir": "/repo/tests",
+        "testIgnore": [
+          "/launch|globalsetup/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 6000
+      },
+      {
+        "outputDir": "/repo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "badlaunch",
+        "name": "badlaunch",
+        "testDir": "/repo/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/launch\\.spec/"
+        ],
+        "timeout": 6000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "errs.spec.ts",
+      "file": "errs.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "title mismatch",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1221,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"Dashboard\"\u001b[39m\nReceived: \u001b[31m\"Home\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 1000ms\u001b[22m\n\u001b[2m    11 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"Home\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"Dashboard\"\u001b[39m\nReceived: \u001b[31m\"Home\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 1000ms\u001b[22m\n\u001b[2m    11 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"Home\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:3:94",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 94,
+                      "line": 3
+                    },
+                    "snippet": "  1 | import { test, expect } from \"@playwright/test\";\n  2 | const html = `<title>Home</title><button id=b data-x=1>Go</button><div id=h style=\"display:none\">hid</div><input id=i value=abc><a id=l href=\"/authors/42\">authors</a><button id=d disabled>Dis</button><div id=v>visible</div><button id=inv style=\"visibility:hidden\">Invisible</button>`;\n> 3 | test(\"title mismatch\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveTitle(\"Dashboard\"); });\n    |                                                                                              ^\n  4 | test(\"attribute mismatch\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#b\")).toHaveAttribute(\"data-x\", \"2\"); });\n  5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n  6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 94,
+                        "line": 3
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"Dashboard\"\u001b[39m\nReceived: \u001b[31m\"Home\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 1000ms\u001b[22m\n\u001b[2m    11 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"Home\"\u001b[22m\n\n\n  1 | import { test, expect } from \"@playwright/test\";\n  2 | const html = `<title>Home</title><button id=b data-x=1>Go</button><div id=h style=\"display:none\">hid</div><input id=i value=abc><a id=l href=\"/authors/42\">authors</a><button id=d disabled>Dis</button><div id=v>visible</div><button id=inv style=\"visibility:hidden\">Invisible</button>`;\n> 3 | test(\"title mismatch\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveTitle(\"Dashboard\"); });\n    |                                                                                              ^\n  4 | test(\"attribute mismatch\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#b\")).toHaveAttribute(\"data-x\", \"2\"); });\n  5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n  6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n    at /repo/tests/errs.spec.ts:3:94"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:37.871Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-title-mismatch-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 94,
+                    "line": 3
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-ffb140766bb12fa835e4",
+          "file": "errs.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "attribute mismatch",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1227,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#b')\nExpected: \u001b[32m\"2\"\u001b[39m\nReceived: \u001b[31m\"1\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('#b') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#b')\u001b[22m\n\u001b[2m    11 × locator resolved to <button id=\"b\" data-x=\"1\">Go</button>\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#b')\nExpected: \u001b[32m\"2\"\u001b[39m\nReceived: \u001b[31m\"1\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('#b') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#b')\u001b[22m\n\u001b[2m    11 × locator resolved to <button id=\"b\" data-x=\"1\">Go</button>\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:4:112",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 112,
+                      "line": 4
+                    },
+                    "snippet": "  2 | const html = `<title>Home</title><button id=b data-x=1>Go</button><div id=h style=\"display:none\">hid</div><input id=i value=abc><a id=l href=\"/authors/42\">authors</a><button id=d disabled>Dis</button><div id=v>visible</div><button id=inv style=\"visibility:hidden\">Invisible</button>`;\n  3 | test(\"title mismatch\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveTitle(\"Dashboard\"); });\n> 4 | test(\"attribute mismatch\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#b\")).toHaveAttribute(\"data-x\", \"2\"); });\n    |                                                                                                                ^\n  5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n  6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n  7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 112,
+                        "line": 4
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#b')\nExpected: \u001b[32m\"2\"\u001b[39m\nReceived: \u001b[31m\"1\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('#b') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#b')\u001b[22m\n\u001b[2m    11 × locator resolved to <button id=\"b\" data-x=\"1\">Go</button>\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  2 | const html = `<title>Home</title><button id=b data-x=1>Go</button><div id=h style=\"display:none\">hid</div><input id=i value=abc><a id=l href=\"/authors/42\">authors</a><button id=d disabled>Dis</button><div id=v>visible</div><button id=inv style=\"visibility:hidden\">Invisible</button>`;\n  3 | test(\"title mismatch\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveTitle(\"Dashboard\"); });\n> 4 | test(\"attribute mismatch\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#b\")).toHaveAttribute(\"data-x\", \"2\"); });\n    |                                                                                                                ^\n  5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n  6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n  7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n    at /repo/tests/errs.spec.ts:4:112"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:39.929Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-attribute-mismatch-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 112,
+                    "line": 4
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-ddf5b443aac204ed225c",
+          "file": "errs.spec.ts",
+          "line": 4,
+          "column": 5
+        },
+        {
+          "title": "hidden expected but visible",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1234,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: hidden\nReceived: visible\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: hidden\nReceived: visible\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:5:121",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 121,
+                      "line": 5
+                    },
+                    "snippet": "  3 | test(\"title mismatch\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveTitle(\"Dashboard\"); });\n  4 | test(\"attribute mismatch\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#b\")).toHaveAttribute(\"data-x\", \"2\"); });\n> 5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n    |                                                                                                                         ^\n  6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n  7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n  8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 121,
+                        "line": 5
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: hidden\nReceived: visible\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n\n  3 | test(\"title mismatch\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveTitle(\"Dashboard\"); });\n  4 | test(\"attribute mismatch\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#b\")).toHaveAttribute(\"data-x\", \"2\"); });\n> 5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n    |                                                                                                                         ^\n  6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n  7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n  8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n    at /repo/tests/errs.spec.ts:5:121"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:42.008Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-hidden-expected-but-visible-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 121,
+                    "line": 5
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-5544f546ae26e94eb2ce",
+          "file": "errs.spec.ts",
+          "line": 5,
+          "column": 5
+        },
+        {
+          "title": "not visible expected but visible",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1239,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: not visible\nReceived: visible\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"not toBeVisible\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: not visible\nReceived: visible\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"not toBeVisible\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:6:130",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 130,
+                      "line": 6
+                    },
+                    "snippet": "  4 | test(\"attribute mismatch\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#b\")).toHaveAttribute(\"data-x\", \"2\"); });\n  5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n> 6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n    |                                                                                                                                  ^\n  7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n  8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n  9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 130,
+                        "line": 6
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: not visible\nReceived: visible\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"not toBeVisible\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n\n  4 | test(\"attribute mismatch\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#b\")).toHaveAttribute(\"data-x\", \"2\"); });\n  5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n> 6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n    |                                                                                                                                  ^\n  7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n  8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n  9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n    at /repo/tests/errs.spec.ts:6:130"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:44.073Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-not-visible-expected-but-visible-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 130,
+                    "line": 6
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-4cbd494bdc7d1e907492",
+          "file": "errs.spec.ts",
+          "line": 6,
+          "column": 5
+        },
+        {
+          "title": "generic toBe",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 250,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m503\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m503\u001b[39m\n    at /repo/tests/errs.spec.ts:7:79",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 79,
+                      "line": 7
+                    },
+                    "snippet": "   5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n   6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n>  7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n     |                                                                               ^\n   8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n   9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 79,
+                        "line": 7
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m503\u001b[39m\n\n   5 | test(\"hidden expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toBeHidden(); });\n   6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n>  7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n     |                                                                               ^\n   8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n   9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n    at /repo/tests/errs.spec.ts:7:79"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:46.316Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-generic-toBe-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 79,
+                    "line": 7
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-66c14b4cc04046556f26",
+          "file": "errs.spec.ts",
+          "line": 7,
+          "column": 5
+        },
+        {
+          "title": "generic toEqual",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 269,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"a\": 2,\u001b[39m\n\u001b[31m+   \"a\": 1,\u001b[39m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"a\": 2,\u001b[39m\n\u001b[31m+   \"a\": 1,\u001b[39m\n\u001b[2m  }\u001b[22m\n    at /repo/tests/errs.spec.ts:8:64",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 64,
+                      "line": 8
+                    },
+                    "snippet": "   6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n   7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n>  8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n     |                                                                ^\n   9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 64,
+                        "line": 8
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"a\": 2,\u001b[39m\n\u001b[31m+   \"a\": 1,\u001b[39m\n\u001b[2m  }\u001b[22m\n\n   6 | test(\"not visible expected but visible\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).not.toBeVisible(); });\n   7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n>  8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n     |                                                                ^\n   9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n    at /repo/tests/errs.spec.ts:8:64"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:47.515Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-generic-toEqual-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 64,
+                    "line": 8
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-4541774a045e4287d350",
+          "file": "errs.spec.ts",
+          "line": 8,
+          "column": 5
+        },
+        {
+          "title": "click invisible",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1768,
+                  "error": {
+                    "message": "TimeoutError: locator.click: Timeout 1500ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inv')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inv\">Invisible</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    3 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n",
+                    "stack": "TimeoutError: locator.click: Timeout 1500ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inv')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inv\">Invisible</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    3 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at /repo/tests/errs.spec.ts:9:103",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 103,
+                      "line": 9
+                    },
+                    "snippet": "   7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n   8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n>  9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n     |                                                                                                       ^\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 103,
+                        "line": 9
+                      },
+                      "message": "TimeoutError: locator.click: Timeout 1500ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inv')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inv\">Invisible</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    3 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n\n   7 | test(\"generic toBe\", async ({ page }) => { const status = 503; expect(status).toBe(200); });\n   8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n>  9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n     |                                                                                                       ^\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n    at /repo/tests/errs.spec.ts:9:103"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:48.653Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-click-invisible-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 103,
+                    "line": 9
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-54af6b65d656ac05e1e6",
+          "file": "errs.spec.ts",
+          "line": 9,
+          "column": 5
+        },
+        {
+          "title": "click disabled",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1732,
+                  "error": {
+                    "message": "TimeoutError: locator.click: Timeout 1500ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#d')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"d\" disabled>Dis</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    3 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n",
+                    "stack": "TimeoutError: locator.click: Timeout 1500ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#d')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"d\" disabled>Dis</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    3 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at /repo/tests/errs.spec.ts:10:100",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 100,
+                      "line": 10
+                    },
+                    "snippet": "   8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n   9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n> 10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n     |                                                                                                    ^\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n  13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 100,
+                        "line": 10
+                      },
+                      "message": "TimeoutError: locator.click: Timeout 1500ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#d')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"d\" disabled>Dis</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    3 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n\n   8 | test(\"generic toEqual\", async ({ page }) => { expect({ a: 1 }).toEqual({ a: 2 }); });\n   9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n> 10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n     |                                                                                                    ^\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n  13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n    at /repo/tests/errs.spec.ts:10:100"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:51.287Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-click-disabled-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 100,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-d4d94efdcd1682ce9451",
+          "file": "errs.spec.ts",
+          "line": 10,
+          "column": 5
+        },
+        {
+          "title": "toBeEnabled fail",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1237,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#d')\nExpected: enabled\nReceived: disabled\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" locator('#d') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#d')\u001b[22m\n\u001b[2m    11 × locator resolved to <button id=\"d\" disabled>Dis</button>\u001b[22m\n\u001b[2m       - unexpected value \"disabled\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#d')\nExpected: enabled\nReceived: disabled\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" locator('#d') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#d')\u001b[22m\n\u001b[2m    11 × locator resolved to <button id=\"d\" disabled>Dis</button>\u001b[22m\n\u001b[2m       - unexpected value \"disabled\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:11:110",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 110,
+                      "line": 11
+                    },
+                    "snippet": "   9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n> 11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n     |                                                                                                              ^\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n  13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n  14 | test(\"toHaveURL authors\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveURL(/\\/books\\/42/); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 110,
+                        "line": 11
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#d')\nExpected: enabled\nReceived: disabled\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" locator('#d') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#d')\u001b[22m\n\u001b[2m    11 × locator resolved to <button id=\"d\" disabled>Dis</button>\u001b[22m\n\u001b[2m       - unexpected value \"disabled\"\u001b[22m\n\n\n   9 | test(\"click invisible\", async ({ page }) => { await page.setContent(html); await page.locator(\"#inv\").click(); });\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n> 11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n     |                                                                                                              ^\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n  13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n  14 | test(\"toHaveURL authors\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveURL(/\\/books\\/42/); });\n    at /repo/tests/errs.spec.ts:11:110"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:53.873Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-toBeEnabled-fail-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 110,
+                    "line": 11
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-e8c20afba84c064e3e63",
+          "file": "errs.spec.ts",
+          "line": 11,
+          "column": 5
+        },
+        {
+          "title": "toBeVisible fail",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1230,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#h')\nExpected: visible\nReceived: hidden\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('#h') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#h')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"h\">hid</div>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#h')\nExpected: visible\nReceived: hidden\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('#h') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#h')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"h\">hid</div>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:12:110",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 110,
+                      "line": 12
+                    },
+                    "snippet": "  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n> 12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n     |                                                                                                              ^\n  13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n  14 | test(\"toHaveURL authors\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveURL(/\\/books\\/42/); });\n  15 | test(\"frame detached\", async ({ page }) => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 110,
+                        "line": 12
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#h')\nExpected: visible\nReceived: hidden\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('#h') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#h')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"h\">hid</div>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n\n  10 | test(\"click disabled\", async ({ page }) => { await page.setContent(html); await page.locator(\"#d\").click(); });\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n> 12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n     |                                                                                                              ^\n  13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n  14 | test(\"toHaveURL authors\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveURL(/\\/books\\/42/); });\n  15 | test(\"frame detached\", async ({ page }) => {\n    at /repo/tests/errs.spec.ts:12:110"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:56.007Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-toBeVisible-fail-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 110,
+                    "line": 12
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-158f0fbe358005e9d0b8",
+          "file": "errs.spec.ts",
+          "line": 12,
+          "column": 5
+        },
+        {
+          "title": "toHaveClass fail",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1248,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveClass\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: \u001b[32m\"x\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveClass\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveClass\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: \u001b[32m\"x\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveClass\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:13:110",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 110,
+                      "line": 13
+                    },
+                    "snippet": "  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n> 13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n     |                                                                                                              ^\n  14 | test(\"toHaveURL authors\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveURL(/\\/books\\/42/); });\n  15 | test(\"frame detached\", async ({ page }) => {\n  16 |   await page.setContent(`<iframe id=f srcdoc=\"<p>hi</p>\"></iframe>`);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 110,
+                        "line": 13
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveClass\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#v')\nExpected: \u001b[32m\"x\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveClass\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"\"\u001b[22m\n\n\n  11 | test(\"toBeEnabled fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#d\")).toBeEnabled(); });\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n> 13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n     |                                                                                                              ^\n  14 | test(\"toHaveURL authors\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveURL(/\\/books\\/42/); });\n  15 | test(\"frame detached\", async ({ page }) => {\n  16 |   await page.setContent(`<iframe id=f srcdoc=\"<p>hi</p>\"></iframe>`);\n    at /repo/tests/errs.spec.ts:13:110"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:31:58.153Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-toHaveClass-fail-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 110,
+                    "line": 13
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-8ebb7c8e64188d02907f",
+          "file": "errs.spec.ts",
+          "line": 13,
+          "column": 5
+        },
+        {
+          "title": "toHaveURL authors",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1243,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/books\\/42/\u001b[39m\nReceived string:  \u001b[31m\"about:blank\"\u001b[39m\nTimeout: 1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 1000ms\u001b[22m\n\u001b[2m    11 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"about:blank\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/books\\/42/\u001b[39m\nReceived string:  \u001b[31m\"about:blank\"\u001b[39m\nTimeout: 1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 1000ms\u001b[22m\n\u001b[2m    11 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"about:blank\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:14:97",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 97,
+                      "line": 14
+                    },
+                    "snippet": "  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n  13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n> 14 | test(\"toHaveURL authors\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveURL(/\\/books\\/42/); });\n     |                                                                                                 ^\n  15 | test(\"frame detached\", async ({ page }) => {\n  16 |   await page.setContent(`<iframe id=f srcdoc=\"<p>hi</p>\"></iframe>`);\n  17 |   const frame = page.frameLocator(\"#f\").locator(\"p\");"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 97,
+                        "line": 14
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/books\\/42/\u001b[39m\nReceived string:  \u001b[31m\"about:blank\"\u001b[39m\nTimeout: 1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 1000ms\u001b[22m\n\u001b[2m    11 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"about:blank\"\u001b[22m\n\n\n  12 | test(\"toBeVisible fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#h\")).toBeVisible(); });\n  13 | test(\"toHaveClass fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toHaveClass(\"x\"); });\n> 14 | test(\"toHaveURL authors\", async ({ page }) => { await page.setContent(html); await expect(page).toHaveURL(/\\/books\\/42/); });\n     |                                                                                                 ^\n  15 | test(\"frame detached\", async ({ page }) => {\n  16 |   await page.setContent(`<iframe id=f srcdoc=\"<p>hi</p>\"></iframe>`);\n  17 |   const frame = page.frameLocator(\"#f\").locator(\"p\");\n    at /repo/tests/errs.spec.ts:14:97"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:00.569Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-toHaveURL-authors-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 97,
+                    "line": 14
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-43cf1b5cc2def3073a62",
+          "file": "errs.spec.ts",
+          "line": 14,
+          "column": 5
+        },
+        {
+          "title": "frame detached",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1150,
+                  "error": {
+                    "message": "TimeoutError: locator.click: Timeout 800ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#f').contentFrame().locator('p')\u001b[22m\n",
+                    "stack": "TimeoutError: locator.click: Timeout 800ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#f').contentFrame().locator('p')\u001b[22m\n\n    at /repo/tests/errs.spec.ts:20:15",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 15,
+                      "line": 20
+                    },
+                    "snippet": "  18 |   await expect(frame).toHaveText(\"hi\");\n  19 |   await page.evaluate(() => document.getElementById(\"f\")!.remove());\n> 20 |   await frame.click({ timeout: 800 });\n     |               ^\n  21 | });\n  22 | test(\"execution context destroyed\", async ({ page }) => {\n  23 |   await page.setContent(html);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 15,
+                        "line": 20
+                      },
+                      "message": "TimeoutError: locator.click: Timeout 800ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#f').contentFrame().locator('p')\u001b[22m\n\n\n  18 |   await expect(frame).toHaveText(\"hi\");\n  19 |   await page.evaluate(() => document.getElementById(\"f\")!.remove());\n> 20 |   await frame.click({ timeout: 800 });\n     |               ^\n  21 | });\n  22 | test(\"execution context destroyed\", async ({ page }) => {\n  23 |   await page.setContent(html);\n    at /repo/tests/errs.spec.ts:20:15"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:02.716Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-frame-detached-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 15,
+                    "line": 20
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-4640c1979302a7332a65",
+          "file": "errs.spec.ts",
+          "line": 15,
+          "column": 5
+        },
+        {
+          "title": "execution context destroyed",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 275,
+                  "error": {
+                    "message": "Error: page.evaluate: Execution context was destroyed, most likely because of a navigation",
+                    "stack": "Error: page.evaluate: Execution context was destroyed, most likely because of a navigation\n    at /repo/tests/errs.spec.ts:24:18",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 18,
+                      "line": 24
+                    },
+                    "snippet": "  22 | test(\"execution context destroyed\", async ({ page }) => {\n  23 |   await page.setContent(html);\n> 24 |   const p = page.evaluate(() => new Promise((r) => setTimeout(r, 3000)));\n     |                  ^\n  25 |   await page.goto(\"about:blank\");\n  26 |   await p;\n  27 | });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 18,
+                        "line": 24
+                      },
+                      "message": "Error: page.evaluate: Execution context was destroyed, most likely because of a navigation\n\n  22 | test(\"execution context destroyed\", async ({ page }) => {\n  23 |   await page.setContent(html);\n> 24 |   const p = page.evaluate(() => new Promise((r) => setTimeout(r, 3000)));\n     |                  ^\n  25 |   await page.goto(\"about:blank\");\n  26 |   await p;\n  27 | });\n    at /repo/tests/errs.spec.ts:24:18"
+                    },
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 18,
+                        "line": 24
+                      },
+                      "message": "Error: page.evaluate: Execution context was destroyed, most likely because of a navigation\n\n  22 | test(\"execution context destroyed\", async ({ page }) => {\n  23 |   await page.setContent(html);\n> 24 |   const p = page.evaluate(() => new Promise((r) => setTimeout(r, 3000)));\n     |                  ^\n  25 |   await page.goto(\"about:blank\");\n  26 |   await p;\n  27 | });\n    at /repo/tests/errs.spec.ts:24:18"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "(node:23831) PromiseRejectionHandledWarning: Promise rejection was handled asynchronously (rejection id: 3)\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:04.860Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-execution-context-destroyed-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 18,
+                    "line": 24
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-1818096ad719265b5639",
+          "file": "errs.spec.ts",
+          "line": 22,
+          "column": 5
+        },
+        {
+          "title": "api ECONNREFUSED",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 29,
+                  "error": {
+                    "message": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:1\nCall log:\n\u001b[2m  - → GET http://127.0.0.1:1/api/x\u001b[22m\n\u001b[2m    - user-agent: Playwright/1.63.0 (x64; ubuntu 24.04) node/22.22\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n",
+                    "stack": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:1\nCall log:\n\u001b[2m  - → GET http://127.0.0.1:1/api/x\u001b[22m\n\u001b[2m    - user-agent: Playwright/1.63.0 (x64; ubuntu 24.04) node/22.22\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\n    at /repo/tests/errs.spec.ts:28:65",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 65,
+                      "line": 28
+                    },
+                    "snippet": "  26 |   await p;\n  27 | });\n> 28 | test(\"api ECONNREFUSED\", async ({ request }) => { await request.get(\"http://127.0.0.1:1/api/x\"); });\n     |                                                                 ^\n  29 | test(\"api ENOTFOUND\", async ({ request }) => { await request.get(\"http://nonexistent.invalid/api/x\"); });\n  30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n  31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 65,
+                        "line": 28
+                      },
+                      "message": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:1\nCall log:\n\u001b[2m  - → GET http://127.0.0.1:1/api/x\u001b[22m\n\u001b[2m    - user-agent: Playwright/1.63.0 (x64; ubuntu 24.04) node/22.22\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\n\n  26 |   await p;\n  27 | });\n> 28 | test(\"api ECONNREFUSED\", async ({ request }) => { await request.get(\"http://127.0.0.1:1/api/x\"); });\n     |                                                                 ^\n  29 | test(\"api ENOTFOUND\", async ({ request }) => { await request.get(\"http://nonexistent.invalid/api/x\"); });\n  30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n  31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n    at /repo/tests/errs.spec.ts:28:65"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:06.024Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-api-ECONNREFUSED-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 65,
+                    "line": 28
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-5851ddd2bcea08d37879",
+          "file": "errs.spec.ts",
+          "line": 28,
+          "column": 5
+        },
+        {
+          "title": "api ENOTFOUND",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 15,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 34,
+                  "error": {
+                    "message": "Error: apiRequestContext.get: getaddrinfo ENOTFOUND nonexistent.invalid\nCall log:\n\u001b[2m  - → GET http://nonexistent.invalid/api/x\u001b[22m\n\u001b[2m    - user-agent: Playwright/1.63.0 (x64; ubuntu 24.04) node/22.22\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n",
+                    "stack": "Error: apiRequestContext.get: getaddrinfo ENOTFOUND nonexistent.invalid\nCall log:\n\u001b[2m  - → GET http://nonexistent.invalid/api/x\u001b[22m\n\u001b[2m    - user-agent: Playwright/1.63.0 (x64; ubuntu 24.04) node/22.22\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\n    at /repo/tests/errs.spec.ts:29:62",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 62,
+                      "line": 29
+                    },
+                    "snippet": "  27 | });\n  28 | test(\"api ECONNREFUSED\", async ({ request }) => { await request.get(\"http://127.0.0.1:1/api/x\"); });\n> 29 | test(\"api ENOTFOUND\", async ({ request }) => { await request.get(\"http://nonexistent.invalid/api/x\"); });\n     |                                                              ^\n  30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n  31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n  32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 62,
+                        "line": 29
+                      },
+                      "message": "Error: apiRequestContext.get: getaddrinfo ENOTFOUND nonexistent.invalid\nCall log:\n\u001b[2m  - → GET http://nonexistent.invalid/api/x\u001b[22m\n\u001b[2m    - user-agent: Playwright/1.63.0 (x64; ubuntu 24.04) node/22.22\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\n\n  27 | });\n  28 | test(\"api ECONNREFUSED\", async ({ request }) => { await request.get(\"http://127.0.0.1:1/api/x\"); });\n> 29 | test(\"api ENOTFOUND\", async ({ request }) => { await request.get(\"http://nonexistent.invalid/api/x\"); });\n     |                                                              ^\n  30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n  31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n  32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n    at /repo/tests/errs.spec.ts:29:62"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:06.662Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-api-ENOTFOUND-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 62,
+                    "line": 29
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-13f77915379b32da6955",
+          "file": "errs.spec.ts",
+          "line": 29,
+          "column": 5
+        },
+        {
+          "title": "goto empty response",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 16,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 307,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:1/\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:1/\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:1/\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:1/\", waiting until \"load\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:30:62",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 62,
+                      "line": 30
+                    },
+                    "snippet": "  28 | test(\"api ECONNREFUSED\", async ({ request }) => { await request.get(\"http://127.0.0.1:1/api/x\"); });\n  29 | test(\"api ENOTFOUND\", async ({ request }) => { await request.get(\"http://nonexistent.invalid/api/x\"); });\n> 30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n     |                                                              ^\n  31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n  32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n  33 | test(\"process exit\", async () => { process.exit(3); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 62,
+                        "line": 30
+                      },
+                      "message": "Error: page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:1/\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:1/\", waiting until \"load\"\u001b[22m\n\n\n  28 | test(\"api ECONNREFUSED\", async ({ request }) => { await request.get(\"http://127.0.0.1:1/api/x\"); });\n  29 | test(\"api ENOTFOUND\", async ({ request }) => { await request.get(\"http://nonexistent.invalid/api/x\"); });\n> 30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n     |                                                              ^\n  31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n  32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n  33 | test(\"process exit\", async () => { process.exit(3); });\n    at /repo/tests/errs.spec.ts:30:62"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:07.257Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-goto-empty-response-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 62,
+                    "line": 30
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-ca68b89641f26059a27f",
+          "file": "errs.spec.ts",
+          "line": 30,
+          "column": 5
+        },
+        {
+          "title": "fill undefined",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 17,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 253,
+                  "error": {
+                    "message": "Error: locator.fill: value: expected string, got undefined",
+                    "stack": "Error: locator.fill: value: expected string, got undefined\n    at /repo/tests/errs.spec.ts:31:100",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 100,
+                      "line": 31
+                    },
+                    "snippet": "  29 | test(\"api ENOTFOUND\", async ({ request }) => { await request.get(\"http://nonexistent.invalid/api/x\"); });\n  30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n> 31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n     |                                                                                                    ^\n  32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n  33 | test(\"process exit\", async () => { process.exit(3); });\n  34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 100,
+                        "line": 31
+                      },
+                      "message": "Error: locator.fill: value: expected string, got undefined\n\n  29 | test(\"api ENOTFOUND\", async ({ request }) => { await request.get(\"http://nonexistent.invalid/api/x\"); });\n  30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n> 31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n     |                                                                                                    ^\n  32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n  33 | test(\"process exit\", async () => { process.exit(3); });\n  34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n    at /repo/tests/errs.spec.ts:31:100"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:08.377Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-fill-undefined-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 100,
+                    "line": 31
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-c6247905cfe289a8263c",
+          "file": "errs.spec.ts",
+          "line": 31,
+          "column": 5
+        },
+        {
+          "title": "missing storage state",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 18,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7,
+                  "error": {
+                    "message": "Error: Error reading storage state from /tmp/.auth/none.json:\nENOENT: no such file or directory, open '/tmp/.auth/none.json'",
+                    "stack": "Error: Error reading storage state from /tmp/.auth/none.json:\nENOENT: no such file or directory, open '/tmp/.auth/none.json'\n    at /repo/tests/errs.spec.ts:32:56",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 56,
+                      "line": 32
+                    },
+                    "snippet": "  30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n  31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n> 32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n     |                                                        ^\n  33 | test(\"process exit\", async () => { process.exit(3); });\n  34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n  35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 56,
+                        "line": 32
+                      },
+                      "message": "Error: Error reading storage state from /tmp/.auth/none.json:\nENOENT: no such file or directory, open '/tmp/.auth/none.json'\n\n  30 | test(\"goto empty response\", async ({ page }) => { await page.goto(\"http://127.0.0.1:1/\"); });\n  31 | test(\"fill undefined\", async ({ page }) => { await page.setContent(html); await page.locator(\"#i\").fill(process.env.NOPE as string); });\n> 32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n     |                                                        ^\n  33 | test(\"process exit\", async () => { process.exit(3); });\n  34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n  35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n    at /repo/tests/errs.spec.ts:32:56"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:09.480Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-missing-storage-state-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 56,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-711fcb0fe4174d354c39",
+          "file": "errs.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "process exit",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 19,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 0,
+                  "error": {
+                    "message": "Error: worker process exited unexpectedly (code=3, signal=null)"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: worker process exited unexpectedly (code=3, signal=null)"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:10.326Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-2de7c70cdef9884d8f6c",
+          "file": "errs.spec.ts",
+          "line": 33,
+          "column": 5
+        },
+        {
+          "title": "download wait timeout",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 20,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1052,
+                  "error": {
+                    "message": "TimeoutError: page.waitForEvent: Timeout 800ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+                    "stack": "TimeoutError: page.waitForEvent: Timeout 800ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n    at /repo/tests/errs.spec.ts:34:97",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 97,
+                      "line": 34
+                    },
+                    "snippet": "  32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n  33 | test(\"process exit\", async () => { process.exit(3); });\n> 34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n     |                                                                                                 ^\n  35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n  36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 97,
+                        "line": 34
+                      },
+                      "message": "TimeoutError: page.waitForEvent: Timeout 800ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n\n  32 | test(\"missing storage state\", async ({ browser }) => { await browser.newContext({ storageState: \"/tmp/.auth/none.json\" }); });\n  33 | test(\"process exit\", async () => { process.exit(3); });\n> 34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n     |                                                                                                 ^\n  35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n  36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n    at /repo/tests/errs.spec.ts:34:97"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:10.900Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-download-wait-timeout-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 97,
+                    "line": 34
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-56fe50065a1a1dce0844",
+          "file": "errs.spec.ts",
+          "line": 34,
+          "column": 5
+        },
+        {
+          "title": "hook-like: cannot read props",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 21,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 221,
+                  "error": {
+                    "message": "TypeError: Cannot read properties of undefined (reading 'x')",
+                    "stack": "TypeError: Cannot read properties of undefined (reading 'x')\n    at /repo/tests/errs.spec.ts:35:100",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 100,
+                      "line": 35
+                    },
+                    "snippet": "  33 | test(\"process exit\", async () => { process.exit(3); });\n  34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n> 35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n     |                                                                                                    ^\n  36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 100,
+                        "line": 35
+                      },
+                      "message": "TypeError: Cannot read properties of undefined (reading 'x')\n\n  33 | test(\"process exit\", async () => { process.exit(3); });\n  34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n> 35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n     |                                                                                                    ^\n  36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n    at /repo/tests/errs.spec.ts:35:100"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:12.798Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-hook-like-cannot-read-props-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 100,
+                    "line": 35
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-87413856e9184cbb731f",
+          "file": "errs.spec.ts",
+          "line": 35,
+          "column": 5
+        },
+        {
+          "title": "toHaveCount fail",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 22,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1411,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('button')\nExpected: \u001b[32m5\u001b[39m\nReceived: \u001b[31m3\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" locator('button') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('button')\u001b[22m\n\u001b[2m    11 × locator resolved to 3 elements\u001b[22m\n\u001b[2m       - unexpected value \"3\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('button')\nExpected: \u001b[32m5\u001b[39m\nReceived: \u001b[31m3\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" locator('button') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('button')\u001b[22m\n\u001b[2m    11 × locator resolved to 3 elements\u001b[22m\n\u001b[2m       - unexpected value \"3\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:36:114",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 114,
+                      "line": 36
+                    },
+                    "snippet": "  34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n  35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n> 36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n     |                                                                                                                  ^\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n  39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 114,
+                        "line": 36
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('button')\nExpected: \u001b[32m5\u001b[39m\nReceived: \u001b[31m3\u001b[39m\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" locator('button') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('button')\u001b[22m\n\u001b[2m    11 × locator resolved to 3 elements\u001b[22m\n\u001b[2m       - unexpected value \"3\"\u001b[22m\n\n\n  34 | test(\"download wait timeout\", async ({ page }) => { await page.setContent(html); const d = page.waitForEvent(\"download\", { timeout: 800 }); await d; });\n  35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n> 36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n     |                                                                                                                  ^\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n  39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });\n    at /repo/tests/errs.spec.ts:36:114"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:13.857Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-toHaveCount-fail-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 114,
+                    "line": 36
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-3d30abe11f388e727e99",
+          "file": "errs.spec.ts",
+          "line": 36,
+          "column": 5
+        },
+        {
+          "title": "toContainText fail",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 23,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1234,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#v')\nExpected substring: \u001b[32m\"\u001b[7mwelcom\u001b[27me\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mvisibl\u001b[27me\"\u001b[39m\nTimeout: 1000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#v')\nExpected substring: \u001b[32m\"\u001b[7mwelcom\u001b[27me\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mvisibl\u001b[27me\"\u001b[39m\nTimeout: 1000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:37:112",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 112,
+                      "line": 37
+                    },
+                    "snippet": "  35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n  36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n> 37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n     |                                                                                                                ^\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n  39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });\n  40 | test(\"test timeout while waiting\", async ({ page }) => { test.setTimeout(1500); await page.setContent(html); await page.locator(\"#nothere\").click({ timeout: 10000 }); });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 112,
+                        "line": 37
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#v')\nExpected substring: \u001b[32m\"\u001b[7mwelcom\u001b[27me\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mvisibl\u001b[27me\"\u001b[39m\nTimeout: 1000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#v') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#v')\u001b[22m\n\u001b[2m    11 × locator resolved to <div id=\"v\">visible</div>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n\n  35 | test(\"hook-like: cannot read props\", async ({ page }) => { const o: any = undefined; console.log(o.x.y); });\n  36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n> 37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n     |                                                                                                                ^\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n  39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });\n  40 | test(\"test timeout while waiting\", async ({ page }) => { test.setTimeout(1500); await page.setContent(html); await page.locator(\"#nothere\").click({ timeout: 10000 }); });\n    at /repo/tests/errs.spec.ts:37:112"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:16.063Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-toContainText-fail-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 112,
+                    "line": 37
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-ea0b39bff43b342d18c8",
+          "file": "errs.spec.ts",
+          "line": 37,
+          "column": 5
+        },
+        {
+          "title": "poll fail",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 24,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 581,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n\nCall Log:\n- Timeout 800ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n\nCall Log:\n- Timeout 800ms exceeded while waiting on the predicate\n    at /repo/tests/errs.spec.ts:38:92",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 92,
+                      "line": 38
+                    },
+                    "snippet": "  36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n> 38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n     |                                                                                            ^\n  39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });\n  40 | test(\"test timeout while waiting\", async ({ page }) => { test.setTimeout(1500); await page.setContent(html); await page.locator(\"#nothere\").click({ timeout: 10000 }); });\n  41 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 92,
+                        "line": 38
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n\nCall Log:\n- Timeout 800ms exceeded while waiting on the predicate\n\n  36 | test(\"toHaveCount fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"button\")).toHaveCount(5); });\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n> 38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n     |                                                                                            ^\n  39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });\n  40 | test(\"test timeout while waiting\", async ({ page }) => { test.setTimeout(1500); await page.setContent(html); await page.locator(\"#nothere\").click({ timeout: 10000 }); });\n  41 |\n    at /repo/tests/errs.spec.ts:38:92"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:18.164Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-poll-fail-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 92,
+                    "line": 38
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-039c768aa2f49152dae7",
+          "file": "errs.spec.ts",
+          "line": 38,
+          "column": 5
+        },
+        {
+          "title": "toBeChecked fail",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 25,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1237,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#c')\nExpected: checked\nReceived: unchecked\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" locator('#c') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#c')\u001b[22m\n\u001b[2m    11 × locator resolved to <input id=\"c\" type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#c')\nExpected: checked\nReceived: unchecked\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" locator('#c') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#c')\u001b[22m\n\u001b[2m    11 × locator resolved to <input id=\"c\" type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n\n    at /repo/tests/errs.spec.ts:39:134",
+                    "location": {
+                      "file": "/repo/tests/errs.spec.ts",
+                      "column": 134,
+                      "line": 39
+                    },
+                    "snippet": "  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n> 39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });\n     |                                                                                                                                      ^\n  40 | test(\"test timeout while waiting\", async ({ page }) => { test.setTimeout(1500); await page.setContent(html); await page.locator(\"#nothere\").click({ timeout: 10000 }); });\n  41 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 134,
+                        "line": 39
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#c')\nExpected: checked\nReceived: unchecked\nTimeout:  1000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" locator('#c') with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('#c')\u001b[22m\n\u001b[2m    11 × locator resolved to <input id=\"c\" type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n\n\n  37 | test(\"toContainText fail\", async ({ page }) => { await page.setContent(html); await expect(page.locator(\"#v\")).toContainText(\"welcome\"); });\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n> 39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });\n     |                                                                                                                                      ^\n  40 | test(\"test timeout while waiting\", async ({ page }) => { test.setTimeout(1500); await page.setContent(html); await page.locator(\"#nothere\").click({ timeout: 10000 }); });\n  41 |\n    at /repo/tests/errs.spec.ts:39:134"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:19.488Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-toBeChecked-fail-ok/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/repo/tests/errs.spec.ts",
+                    "column": 134,
+                    "line": 39
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-7ad445c4fc4b4114a0ae",
+          "file": "errs.spec.ts",
+          "line": 39,
+          "column": 5
+        },
+        {
+          "title": "test timeout while waiting",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 1500,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "ok",
+              "projectName": "ok",
+              "results": [
+                {
+                  "workerIndex": 26,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 1543,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 1500ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 1500ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 1500ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/repo/tests/errs.spec.ts",
+                        "column": 141,
+                        "line": 40
+                      },
+                      "message": "Error: locator.click: Test timeout of 1500ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#nothere')\u001b[22m\n\n\n  38 | test(\"poll fail\", async ({ page }) => { await expect.poll(async () => 1, { timeout: 800 }).toBe(2); });\n  39 | test(\"toBeChecked fail\", async ({ page }) => { await page.setContent(`<input type=checkbox id=c>`); await expect(page.locator(\"#c\")).toBeChecked(); });\n> 40 | test(\"test timeout while waiting\", async ({ page }) => { test.setTimeout(1500); await page.setContent(html); await page.locator(\"#nothere\").click({ timeout: 10000 }); });\n     |                                                                                                                                             ^\n  41 |\n    at /repo/tests/errs.spec.ts:40:141"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:32:21.585Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/repo/test-results/errs-test-timeout-while-waiting-ok/error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "516917978fa82cc88352-7f54866d9aafc0e3b7d8",
+          "file": "errs.spec.ts",
+          "line": 40,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-06T19:31:37.350Z",
+    "duration": 46124.45,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 27,
+    "flaky": 0
+  }
+}

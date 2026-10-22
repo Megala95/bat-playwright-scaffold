@@ -1,0 +1,41 @@
+# Item flagged by the September 2026 independent re-review: this repo had no
+# .gitignore at all, which is both an ordinary hygiene gap and a real risk
+# here specifically - AuthScaffold.ts writes a live authenticated browser
+# session (cookies/storage state) to .auth/session.json, which must never be
+# committed.
+
+# Dependencies
+node_modules/
+
+# Playwright output
+test-results/
+playwright-report/
+blob-report/
+all-blob-reports/
+.auth/
+
+# Continuous-improvement loop artifacts - regenerated, not source (see
+# .github/skills/continuous-improvement/SKILL.md). Keep these local/CI-only,
+# not committed, so history doesn't turn into repeated merge noise.
+.flaky-trend/
+flaky-trend.json
+skill-corrections.jsonl
+skill-attention-report.json
+heal-report.json
+script-review-report.json
+
+# Build output
+dist/
+
+# Editor/OS noise
+.DS_Store
+*.log
+npm-debug.log*
+
+# Learning loop (see .github/skills/fix-knowledge-base/SKILL.md). The raw events in
+# .learnings/events/ and the approved patterns in .learnings/patterns/ ARE committed;
+# these are regenerated reports and CI scratch.
+learning-report.json
+learning-report.md
+learning-events/
+learning-store/

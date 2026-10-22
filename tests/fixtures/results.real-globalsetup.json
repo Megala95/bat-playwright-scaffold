@@ -1,0 +1,95 @@
+{
+  "config": {
+    "argv": [
+      "/opt/node22/bin/node",
+      "/repo/node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.env.config.ts"
+    ],
+    "configFile": "/repo/playwright.env.config.ts",
+    "rootDir": "/repo/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "/repo/gs.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/repo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "badlaunch",
+        "name": "badlaunch",
+        "testDir": "/repo/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/launch\\.spec/"
+        ],
+        "timeout": 6000
+      },
+      {
+        "outputDir": "/repo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "nobrowser",
+        "name": "nobrowser",
+        "testDir": "/repo/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/launch\\.spec/"
+        ],
+        "timeout": 6000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "results-gs.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Login failed during globalSetup: HTTP 401 from https://app.example.com/api/login",
+      "stack": "Error: Login failed during globalSetup: HTTP 401 from https://app.example.com/api/login\n    at _default (/repo/gs.ts:1:42)",
+      "location": {
+        "file": "/repo/gs.ts",
+        "column": 42,
+        "line": 1
+      },
+      "snippet": "\u001b[90m   at \u001b[39m../gs.ts:1\n\n> 1 | export default async function () { throw new Error(\"Login failed during globalSetup: HTTP 401 from https://app.example.com/api/login\"); }\n    |                                          ^\n  2 |"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-10-06T19:32:37.387Z",
+    "duration": 20.251999999999953,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

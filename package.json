@@ -1,0 +1,31 @@
+{
+  "name": "bat-ai-automation-scaffold",
+  "version": "0.1.0",
+  "description": "Reference Playwright/TypeScript framework implementing the BAT AI Automation Solution Approach (v1.3) items 2.1-2.4 and 3.3",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:meta": "playwright test tests/meta --project=meta",
+    "test:smoke": "playwright test tests/smoke --project=smoke",
+    "test:main": "playwright test tests/example --project=main",
+    "crawl": "ts-node src/utils/crawlOnce.ts",
+    "extract-html": "ts-node src/utils/htmlRepoLocatorExtractor.ts",
+    "log-correction": "ts-node src/utils/logCorrection.ts",
+    "analyze-skills": "ts-node src/utils/analyzeSkillSignals.ts",
+    "report": "playwright show-report",
+    "heal-analyze": "ts-node src/healer/analyzeResults.ts",
+    "review-scripts": "ts-node src/reviewer/reviewScripts.ts",
+    "learn-capture": "ts-node src/learning/captureGit.ts",
+    "learn-report": "ts-node src/learning/aggregate.ts",
+    "learn-approve": "ts-node src/learning/approve.ts",
+    "learn-publish": "ts-node src/learning/publish.ts",
+    "lookup-fix": "ts-node src/learning/lookup.ts",
+    "learn-install-hook": "ts-node src/learning/installHook.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "cheerio": "^1.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}

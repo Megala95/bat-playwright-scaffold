@@ -1,0 +1,143 @@
+# The learning loop in CI (see .github/skills/fix-knowledge-base/SKILL.md).
+#
+#  pull request -> capture the PR's edits (works even for engineers who did not
+#                  install the git hook), link them to the last failed run's
+#                  heal-report when there is one, and show the result in the job
+#                  summary. Nothing is written back.
+#  push to main / weekly -> append the merged edits to the `bat-learning` data
+#                  branch (a plain in-repo store; swap it for a central store
+#                  later without changing anything else), then build
+#                  learning-report.md from everything stored and check that the
+#                  generated learned-patterns files are current.
+#
+# Nothing here approves or publishes a pattern: that is a named person's decision
+# (npm run learn-approve), reviewed in a pull request.
+name: Learning loop
+
+on:
+  pull_request:
+    paths: ["tests/**", "src/pages/**", "src/locators/**", "output/automation/**"]
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  capture-pr:
+    name: Capture this pull request's fixes
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # The heal-report of the most recent failed run on this branch is what turns
+      # "an edit" into "the fix for this failure". Optional: no earlier failure, no link.
+      - name: Fetch the last failed run's heal-report
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          RUN_ID=$(gh run list --workflow "Playwright Tests" --branch "$HEAD_REF" --status failure --limit 1 --json databaseId --jq '.[0].databaseId')
+          [ -n "$RUN_ID" ] && gh run download "$RUN_ID" -n heal-report -D prev-heal || echo "no earlier failed run"
+      - name: Capture
+        shell: bash
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -o pipefail
+          HEAL=""
+          [ -f prev-heal/heal-report.json ] && HEAL="--heal-report prev-heal/heal-report.json"
+          npm run learn-capture -- --range "origin/${BASE_REF}..HEAD" --write --out-dir learning-events --summary $HEAL | tee capture.txt
+          {
+            echo "### Learning events in this pull request"
+            echo
+            echo '```'
+            cat capture.txt
+            echo '```'
+            echo
+            echo "Regressions (sleeps, force clicks, raised timeouts, weakened assertions) are reported as coaching signals and are never learned as guidance."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: learning-events-pr
+          path: learning-events
+          retention-days: 14
+          if-no-files-found: ignore
+
+  store-and-report:
+    name: Store merged fixes and build the learning report
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    # Only this job writes the data branch. GitHub keeps one pending run per group and cancels older pending
+    # ones, so a skipped push is not lost: each run captures everything since the last SHA stored (last-sha).
+    concurrency:
+      group: learning-store
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # The data branch: one JSON file per capture, named by commit, so appending is idempotent.
+      - name: Open the bat-learning data branch
+        run: |
+          if git fetch origin bat-learning 2>/dev/null; then
+            git worktree add -B bat-learning learning-store origin/bat-learning
+          else
+            git worktree add --detach learning-store
+            git -C learning-store checkout --orphan bat-learning
+            git -C learning-store rm -rf . >/dev/null 2>&1 || true
+          fi
+          mkdir -p learning-store/events
+      - name: Capture what landed on main since the last stored commit
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -o pipefail
+          FROM="$(cat learning-store/last-sha 2>/dev/null || true)"
+          # first run, a force-push, or a history rewrite: fall back to this push's own range
+          if [ -z "$FROM" ] || ! git cat-file -e "$FROM^{commit}" 2>/dev/null; then FROM="${{ github.event.before }}"; fi
+          if [ -n "$FROM" ] && [ "$FROM" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$FROM^{commit}" 2>/dev/null; then
+            npm run learn-capture -- --range "$FROM..${{ github.sha }}" --write --out-dir learning-events
+          else
+            echo "No earlier commit to compare with; nothing captured."
+          fi
+          echo "${{ github.sha }}" > learning-store/last-sha
+      - name: Append to the data branch
+        run: |
+          [ -d learning-events ] && cp -n learning-events/*.json learning-store/events/ 2>/dev/null || true
+          git -C learning-store add -A
+          if ! git -C learning-store diff --cached --quiet; then
+            git -C learning-store -c user.name="bat-learning[bot]" -c user.email="bat-learning@users.noreply.github.com" commit -m "learning: add captured fixes"
+            git -C learning-store push origin HEAD:bat-learning
+          fi
+      - name: Build the learning report
+        run: |
+          npm run learn-report -- --events-dir learning-store/events
+          cat learning-report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Generated learned-patterns files are current
+        run: npm run learn-publish -- --check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: learning-report
+          path: |
+            learning-report.md
+            learning-report.json
+          retention-days: 30

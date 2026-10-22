@@ -1,0 +1,10 @@
+{
+  "minEvents": 3,
+  "minFiles": 2,
+  "minAuthors": 2,
+  "watchEvents": 3,
+  "include": ["^tests/", "^src/pages/", "^src/locators/", "^output/automation/"],
+  "exclude": ["^tests/meta/", "^tests/fixtures/", "node_modules/", "\\.d\\.ts$"],
+  "salt": "bat-learning",
+  "storeStatements": true
+}

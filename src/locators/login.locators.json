@@ -1,0 +1,49 @@
+{
+  "_comment": "Item 2.2: shared, validated locator repository - label -> id/href, XPath validated before saving, CSS/class/get-by-value as fallbacks. Item 2.1: these entries are placeholders in the 'crawl-once-per-project' fallback shape (Option 1) until Cisco grants DevGit/HTML repo access (Option 3). Replace 'value' fields with real, validated selectors for the target app; do not trust unvalidated XPath from a crawl - see src/utils/crawlOnce.ts.",
+  "app": "REPLACE_WITH_APP_NAME (e.g. CCW)",
+  "page": "login",
+  "elements": {
+    "usernameField": {
+      "label": "Username",
+      "elementClass": "EditBox",
+      "primary": { "strategy": "id", "value": "REPLACE_ID_username" },
+      "fallbacks": [
+        { "strategy": "css", "value": "input[name='username']" },
+        { "strategy": "getByLabel", "value": "Username" }
+      ]
+    },
+    "passwordField": {
+      "label": "Password",
+      "elementClass": "EditBox",
+      "primary": { "strategy": "id", "value": "REPLACE_ID_password" },
+      "fallbacks": [
+        { "strategy": "css", "value": "input[name='password']" },
+        { "strategy": "getByLabel", "value": "Password" }
+      ]
+    },
+    "signInButton": {
+      "label": "Sign In",
+      "elementClass": "Button",
+      "primary": { "strategy": "id", "value": "REPLACE_ID_signin" },
+      "fallbacks": [
+        { "strategy": "getByRole", "role": "button", "name": "Sign In" },
+        { "strategy": "css", "value": "button[type='submit']" }
+      ]
+    },
+    "loginErrorMessage": {
+      "label": "Login error banner",
+      "elementClass": "ReadOnlyField",
+      "primary": { "strategy": "css", "value": "[data-testid='login-error']" },
+      "fallbacks": [
+        { "strategy": "css", "value": ".error-banner" },
+        { "strategy": "getByRole", "role": "alert" }
+      ]
+    },
+    "postLoginLandmark": {
+      "label": "Authenticated landing element (e.g. main nav or dashboard header)",
+      "elementClass": "ReadOnlyField",
+      "primary": { "strategy": "css", "value": "[data-testid='app-shell-nav']" },
+      "fallbacks": [{ "strategy": "css", "value": "nav[role='navigation']" }]
+    }
+  }
+}
